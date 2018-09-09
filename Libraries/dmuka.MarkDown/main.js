@@ -494,7 +494,7 @@ dmuka.MarkDown = function (text) {
     };
 
     private.function.getIsList = function (row) {
-        if (row.substring(0, 7) === ' - [ ] ' || row.substring(0, 7) === ' - [x] '){
+        if (row.substring(0, 7) === ' - [ ] ' || row.substring(0, 7) === ' - [x] ') {
             return false;
         }
         return ((row.indexOf('.') > 0 && parseInt(row.split('.')[0]) >= 0) || row.substring(0, 2) === '- ' || row.substring(0, 3) === ' - ') || (row.substring(0, 2) === '+ ' || row.substring(0, 3) === ' + ') || (row.substring(0, 2) === '* ' || row.substring(0, 3) === ' * ');
@@ -520,17 +520,85 @@ dmuka.MarkDown = function (text) {
         return row;
     };
 
+    private.function.getIsTable = function (row) {
+        return row.split('|').length > 2;
+    };
+
+    private.function.getIsCol = function (column) {
+        if (column.length === 0) {
+            return false;
+        }
+
+        for (var charIndex = 0; charIndex < column.length; charIndex++) {
+            if (column[charIndex] !== '-') {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    private.function.getTableRow = function (columns, columnType) {
+        var html = "";
+        html += "<tr>";
+        for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            var column = columns[columnIndex];
+
+            html += "<" + columnType + ">";
+
+            var checkbox = private.function.convertCheckbox(column);
+            if (checkbox.complate === true) {
+                column = checkbox.html;
+            }
+
+            if (checkbox.complate === false) {
+                column = private.function.addSpacesToRow(column);
+            }
+
+            column = private.function.convertImages(column);
+            column = private.function.convertLinks(column);
+
+            column = private.function.convertHeader(column);
+
+            column = private.function.convertBolds(column);
+            column = private.function.convertItalics(column);
+            column = private.function.convertStrikethrough(column);
+
+            column = private.function.addHideTextsToRow(column);
+
+            html += column;
+
+            html += "</" + columnType + ">";
+        }
+        html += "</tr>";
+
+        return html;
+    };
+
     private.function.init = function () {
         var rows = text.split('\n');
         var html = "";
 
         var listType = "ul";
         var listLevel = -1;
+        var tableFirstRow = "";
+        var tablePreviousRowVersion = "";
+        var tableActive = false;
+        var tableHeader = false;
+        var tableControl = false;
         for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             var row = rows[rowIndex];
             private.variable.hideTextsForRow = [];
 
             if (row === '') {
+                if (tableActive === true) {
+                    html += "</table>";
+                }
+                tableActive = false;
+                tableHeader = false;
+                tableControl = false;
+                tableFirstRow = "";
+                tablePreviousRowVersion = "";
+
                 html = private.function.addLineEnd(html, listLevel, listType);
                 listLevel = -1;
 
@@ -538,6 +606,50 @@ dmuka.MarkDown = function (text) {
                     html += "<br/>";
                 }
                 continue;
+            }
+
+            if (private.function.getIsTable(row) === true) {
+                if (tableActive === false) {
+                    html += "<table>";
+                }
+                tableActive = true;
+
+                var columns = row.split('|');
+                columns.splice(0, 1);
+                if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === true) {
+                    html += tableFirstRow;
+                    tableFirstRow = "";
+                    tablePreviousRowVersion = "";
+                    tableControl = true;
+                }
+                else if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === false) {
+                    html += tablePreviousRowVersion + "<br/>";
+                    html += row;
+                    tableFirstRow = "";
+                    tablePreviousRowVersion = "";
+                    tableActive = false;
+                    tableHeader = false;
+                }
+                else if (tableHeader === false) {
+                    tableFirstRow = private.function.getTableRow(columns, "th");
+                    tablePreviousRowVersion = row;
+                    tableHeader = true;
+                }
+                else if (tableControl === true) {
+                    html += private.function.getTableRow(columns, "td");
+                }
+
+                continue;
+            }
+            else {
+                if (tableActive === true) {
+                    html += "</table>";
+                }
+                tableActive = false;
+                tableHeader = false;
+                tableControl = false;
+                tableFirstRow = "";
+                tablePreviousRowVersion = "";
             }
 
             var code = private.function.convertBlockQuote(row);
@@ -580,7 +692,7 @@ dmuka.MarkDown = function (text) {
                         if (listLevel < level) {
                             listLevel++;
                             listType = (rowWithoutLevel.indexOf('.') > 0 && parseInt(rowWithoutLevel.split('.')[0]) >= 0) ? "ol" : "ul";
-                            html +=  "<" + listType + ">";
+                            html += "<" + listType + ">";
                         }
                         else {
                             html = private.function.addLineEnd(html, listLevel - level - 1, type);
