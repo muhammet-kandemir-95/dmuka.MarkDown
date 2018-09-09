@@ -26,6 +26,7 @@ dmuka.MarkDown = function (text) {
     /* Functions --BEGIN */
     // --------------------
 
+    // Remove "<" and ">" character
     private.function.clearHTMLInjection = function (row) {
         var html = "";
         for (var charIndex = 0; charIndex < row.length; charIndex++) {
@@ -41,6 +42,7 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // " " convert to "&nbsp;"
     private.function.addSpacesToRow = function (row) {
         var html = "";
         for (var charIndex = 0; charIndex < row.length; charIndex++) {
@@ -56,11 +58,13 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Hide attributes like href, src, alt, ...
     private.function.getHideTextForRow = function (data) {
         private.variable.hideTextsForRow.push(data);
         return "?hideText" + private.variable.hideTextsForRow.length + "?";
     };
 
+    // Add to hide text to row
     private.function.addHideTextsToRow = function (row) {
         for (var hideTextIndex = 0; hideTextIndex < private.variable.hideTextsForRow.length; hideTextIndex++) {
             row = row.replace("?hideText" + (hideTextIndex + 1) + "?", private.variable.hideTextsForRow[hideTextIndex]);
@@ -69,6 +73,7 @@ dmuka.MarkDown = function (text) {
         return row;
     };
 
+    // Convert bolds text
     private.function.convertBolds = function (row) {
         var html = "";
         for (var charIndex = 0; charIndex < row.length; charIndex++) {
@@ -110,6 +115,7 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Convert italic text
     private.function.convertItalics = function (row) {
         var html = "";
         for (var charIndex = 0; charIndex < row.length; charIndex++) {
@@ -148,6 +154,7 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Convert strikethrough text
     private.function.convertStrikethrough = function (row) {
         var html = "";
         for (var charIndex = 0; charIndex < row.length; charIndex++) {
@@ -189,6 +196,7 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Convert images
     private.function.convertImages = function (row) {
         var getLink = function (subText, charIndex) {
             var result = {
@@ -272,6 +280,7 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Convert links
     private.function.convertLinks = function (row) {
         var getLink = function (subText, charIndex) {
             var result = {
@@ -353,6 +362,7 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Convert space level(Each 2 space = 1 level. For example 4 space = 2 level)
     private.function.getLevel = function (row) {
         var spaceCount = 0;
         var existsOtherCharacter = false;
@@ -377,6 +387,7 @@ dmuka.MarkDown = function (text) {
         }
     };
 
+    // Add space by level
     private.function.addLevelToRow = function (row, level) {
         if (level < 2) {
             return row;
@@ -388,6 +399,7 @@ dmuka.MarkDown = function (text) {
         return DOMcode.outerHTML;
     };
 
+    // Convert header text
     private.function.convertHeader = function (row) {
         var headerCounter = 0;
         var existsSpace = false;
@@ -424,6 +436,7 @@ dmuka.MarkDown = function (text) {
         }
     };
 
+    // Convert block quote text
     private.function.convertBlockQuote = function (row) {
         if (row.substring(0, 2) === '> ') {
             var DOMblockquote = document.createElement("blockquote");
@@ -443,6 +456,7 @@ dmuka.MarkDown = function (text) {
         }
     };
 
+    // Convert line
     private.function.convertLine = function (row) {
         if (row.substring(0, 3) === '---') {
             var DOMhr = document.createElement("hr");
@@ -461,6 +475,7 @@ dmuka.MarkDown = function (text) {
         }
     };
 
+    // Convert checkbox
     private.function.convertCheckbox = function (row) {
         if (row.substring(0, 7) === ' - [ ] ') {
             var DOMcheckox = document.createElement("input");
@@ -493,6 +508,7 @@ dmuka.MarkDown = function (text) {
         }
     };
 
+    // Row is list?
     private.function.getIsList = function (row) {
         if (row.substring(0, 7) === ' - [ ] ' || row.substring(0, 7) === ' - [x] ') {
             return false;
@@ -500,6 +516,7 @@ dmuka.MarkDown = function (text) {
         return ((row.indexOf('.') > 0 && parseInt(row.split('.')[0]) >= 0) || row.substring(0, 2) === '- ' || row.substring(0, 3) === ' - ') || (row.substring(0, 2) === '+ ' || row.substring(0, 3) === ' + ') || (row.substring(0, 2) === '* ' || row.substring(0, 3) === ' * ');
     };
 
+    // Clear list characters
     private.function.clearList = function (row) {
         if (row.substring(0, 2) === '- ' || row.substring(0, 2) === '+ ' || row.substring(0, 2) === '* ') {
             return row.substring(2);
@@ -513,6 +530,7 @@ dmuka.MarkDown = function (text) {
         return row;
     };
 
+    // Add </ul> to end of row
     private.function.addLineEnd = function (row, count, type) {
         for (var countIndex = 0; countIndex < count + 1; countIndex++) {
             row += "</" + type + ">";
@@ -520,10 +538,12 @@ dmuka.MarkDown = function (text) {
         return row;
     };
 
+    // Row is table?
     private.function.getIsTable = function (row) {
         return row.split('|').length > 2;
     };
 
+    // Column is success for draw table?
     private.function.getIsCol = function (column) {
         if (column.length === 0) {
             return false;
@@ -537,6 +557,7 @@ dmuka.MarkDown = function (text) {
         return true;
     };
 
+    // Get new table row with columns
     private.function.getTableRow = function (columns, columnType) {
         var html = "";
         html += "<tr>";
@@ -578,17 +599,22 @@ dmuka.MarkDown = function (text) {
         var rows = text.split('\n');
         var html = "";
 
+        // For list elements
         var listType = "ul";
         var listLevel = -1;
+
+        // For table elements
         var tableFirstRow = "";
         var tablePreviousRowVersion = "";
         var tableActive = false;
         var tableHeader = false;
         var tableControl = false;
+
         for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             var row = rows[rowIndex];
             private.variable.hideTextsForRow = [];
 
+            // Empty row status
             if (row === '') {
                 if (tableActive === true) {
                     html += "</table>";
@@ -608,6 +634,7 @@ dmuka.MarkDown = function (text) {
                 continue;
             }
 
+            // Row is table
             if (private.function.getIsTable(row) === true) {
                 if (tableActive === false) {
                     html += "<table>";
@@ -652,12 +679,13 @@ dmuka.MarkDown = function (text) {
                 tablePreviousRowVersion = "";
             }
 
-            var code = private.function.convertBlockQuote(row);
-            if (code.complate === true) {
+            // Row is block quote
+            var blockQuote = private.function.convertBlockQuote(row);
+            if (blockQuote.complate === true) {
                 html = private.function.addLineEnd(html, listLevel, listType);
                 listLevel = -1;
 
-                html += code.html;
+                html += blockQuote.html;
 
                 if (rowIndex !== rows.length - 1) {
                     html += "<br/>";
@@ -665,6 +693,7 @@ dmuka.MarkDown = function (text) {
                 continue;
             }
 
+            // Row is line
             var line = private.function.convertLine(row);
             if (line.complate === true) {
                 html = private.function.addLineEnd(html, listLevel, listType);
@@ -686,8 +715,9 @@ dmuka.MarkDown = function (text) {
 
                 row = private.function.clearHTMLInjection(row);
 
-                var rowIsLine = private.function.getIsList(rowWithoutLevel);
-                if (rowIsLine === true) {
+                // Row is list
+                var rowIsList = private.function.getIsList(rowWithoutLevel);
+                if (rowIsList === true) {
                     if (listLevel !== level) {
                         if (listLevel < level) {
                             listLevel++;
@@ -708,6 +738,7 @@ dmuka.MarkDown = function (text) {
                     listLevel = -1;
                 }
 
+                // Row is checkbox
                 var checkbox = private.function.convertCheckbox(row);
                 if (checkbox.complate === true) {
                     row = checkbox.html;
@@ -729,13 +760,14 @@ dmuka.MarkDown = function (text) {
 
                 row = private.function.addHideTextsToRow(row);
 
-                if (rowIsLine === true) {
+                if (rowIsList === true) {
                     row += "</li>";
                 }
 
                 html += row;
             }
 
+            // Row end
             if (rowIndex !== rows.length - 1 && listLevel === -1) {
                 html += "<br/>";
             }
