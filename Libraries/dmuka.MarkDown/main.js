@@ -646,10 +646,10 @@ dmuka.MarkDown = function (text) {
 
             // Empty row status
             if (row === '') {
+                if (tablePreviousRowVersion !== '') {
+                    html += tablePreviousRowVersion;
+                }
                 if (tableActive === true) {
-                    if (tableControl === false) {
-                        html += tablePreviousRowVersion;
-                    }
                     html += "</table>";
                 }
                 tableActive = false;
@@ -670,16 +670,13 @@ dmuka.MarkDown = function (text) {
 
             // Row is table
             if (private.function.getIsTable(row) === true) {
-                if (tableActive === false) {
-                    html += "<table>";
-                }
-                tableActive = true;
-
                 var columns = row.split('|');
                 columns.splice(0, 1);
                 if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === true) {
                     tableAligns = private.function.getTableColumnsAlign(columns);
 
+                    tableActive = true;
+                    html += "<table>";
                     html += private.function.getTableRow(tableFirstRowColumns, "th", tableAligns);
                     tableFirstRowColumns = [];
                     tablePreviousRowVersion = "";
@@ -705,10 +702,10 @@ dmuka.MarkDown = function (text) {
                 continue;
             }
             else {
+                if (tablePreviousRowVersion !== '') {
+                    html += tablePreviousRowVersion;
+                }
                 if (tableActive === true) {
-                    if (tableControl === false) {
-                        html += tablePreviousRowVersion;
-                    }
                     html += "</table>";
                 }
                 tableActive = false;
@@ -813,10 +810,10 @@ dmuka.MarkDown = function (text) {
             }
         }
 
+        if (tablePreviousRowVersion !== '') {
+            html += tablePreviousRowVersion;
+        }
         if (tableActive === true) {
-            if (tableControl === false) {
-                html += tablePreviousRowVersion;
-            }
             html += "</table>";
         }
 
