@@ -540,7 +540,7 @@ dmuka.MarkDown = function (text) {
 
     // Row is table?
     private.function.getIsTable = function (row) {
-        return row.split('|').length > 2;
+        return row.split('|').length > 2 && row[0] === '|';
     };
 
     // Column is success for draw table?
@@ -553,7 +553,7 @@ dmuka.MarkDown = function (text) {
         for (var charIndex = 0; charIndex < column.length; charIndex++) {
             var char = column[charIndex];
 
-            if(char === '-'){
+            if (char === '-') {
                 existsColumnData = true;
             }
             if ((char !== '-' && char !== ':') || ((charIndex !== 0 && charIndex !== column.length - 1) && char === ':')) {
@@ -563,18 +563,18 @@ dmuka.MarkDown = function (text) {
         return existsColumnData;
     };
 
-    private.function.getTableColumnsAlign = function(columns) {
+    private.function.getTableColumnsAlign = function (columns) {
         var aligns = [];
         for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             var column = columns[columnIndex];
 
-            if(column[0] === ':' && column[column.length - 1] === ':'){
+            if (column[0] === ':' && column[column.length - 1] === ':') {
                 aligns.push("center");
             }
-            else if(column[0] === ':' && column[column.length - 1] !== ':') {
+            else if (column[0] === ':' && column[column.length - 1] !== ':') {
                 aligns.push("left");
             }
-            else if(column[0] !== ':' && column[column.length - 1] === ':') {
+            else if (column[0] !== ':' && column[column.length - 1] === ':') {
                 aligns.push("right");
             }
             else {
@@ -647,6 +647,9 @@ dmuka.MarkDown = function (text) {
             // Empty row status
             if (row === '') {
                 if (tableActive === true) {
+                    if (tableControl === false) {
+                        html += tablePreviousRowVersion;
+                    }
                     html += "</table>";
                 }
                 tableActive = false;
@@ -703,6 +706,9 @@ dmuka.MarkDown = function (text) {
             }
             else {
                 if (tableActive === true) {
+                    if (tableControl === false) {
+                        html += tablePreviousRowVersion;
+                    }
                     html += "</table>";
                 }
                 tableActive = false;
@@ -759,7 +765,7 @@ dmuka.MarkDown = function (text) {
                             html += "<" + listType + ">";
                         }
                         else {
-                            html = private.function.addLineEnd(html, listLevel - level - 1, type);
+                            html = private.function.addLineEnd(html, listLevel - level - 1, listType);
                             listLevel = level;
                         }
                     }
@@ -805,6 +811,17 @@ dmuka.MarkDown = function (text) {
             if (rowIndex !== rows.length - 1 && listLevel === -1) {
                 html += "<br/>";
             }
+        }
+
+        if (tableActive === true) {
+            if (tableControl === false) {
+                html += tablePreviousRowVersion;
+            }
+            html += "</table>";
+        }
+
+        if (listLevel >= 0) {
+            html = private.function.addLineEnd(html, listLevel, listType);
         }
 
         return html;
