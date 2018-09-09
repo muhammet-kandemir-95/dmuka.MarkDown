@@ -549,22 +549,51 @@ dmuka.MarkDown = function (text) {
             return false;
         }
 
+        var existsColumnData = false;
         for (var charIndex = 0; charIndex < column.length; charIndex++) {
-            if (column[charIndex] !== '-') {
+            var char = column[charIndex];
+
+            if(char === '-'){
+                existsColumnData = true;
+            }
+            if ((char !== '-' && char !== ':') || ((charIndex !== 0 && charIndex !== column.length - 1) && char === ':')) {
                 return false;
             }
         }
-        return true;
+        return existsColumnData;
+    };
+
+    private.function.getTableColumnsAlign = function(columns) {
+        var aligns = [];
+        for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            var column = columns[columnIndex];
+
+            if(column[0] === ':' && column[column.length - 1] === ':'){
+                aligns.push("center");
+            }
+            else if(column[0] === ':' && column[column.length - 1] !== ':') {
+                aligns.push("left");
+            }
+            else if(column[0] !== ':' && column[column.length - 1] === ':') {
+                aligns.push("right");
+            }
+            else {
+                aligns.push("");
+            }
+        }
+
+        return aligns;
     };
 
     // Get new table row with columns
-    private.function.getTableRow = function (columns, columnType) {
+    private.function.getTableRow = function (columns, columnType, tableAligns) {
         var html = "";
         html += "<tr>";
         for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             var column = columns[columnIndex];
+            var align = tableAligns[columnIndex];
 
-            html += "<" + columnType + ">";
+            html += "<" + columnType + " align='" + align + "'>";
 
             var checkbox = private.function.convertCheckbox(column);
             if (checkbox.complate === true) {
@@ -604,11 +633,12 @@ dmuka.MarkDown = function (text) {
         var listLevel = -1;
 
         // For table elements
-        var tableFirstRow = "";
+        var tableFirstRowColumns = [];
         var tablePreviousRowVersion = "";
         var tableActive = false;
         var tableHeader = false;
         var tableControl = false;
+        var tableAligns = [];
 
         for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             var row = rows[rowIndex];
@@ -622,8 +652,9 @@ dmuka.MarkDown = function (text) {
                 tableActive = false;
                 tableHeader = false;
                 tableControl = false;
-                tableFirstRow = "";
+                tableFirstRowColumns = [];
                 tablePreviousRowVersion = "";
+                tableAligns = [];
 
                 html = private.function.addLineEnd(html, listLevel, listType);
                 listLevel = -1;
@@ -644,26 +675,28 @@ dmuka.MarkDown = function (text) {
                 var columns = row.split('|');
                 columns.splice(0, 1);
                 if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === true) {
-                    html += tableFirstRow;
-                    tableFirstRow = "";
+                    tableAligns = private.function.getTableColumnsAlign(columns);
+
+                    html += private.function.getTableRow(tableFirstRowColumns, "th", tableAligns);
+                    tableFirstRowColumns = [];
                     tablePreviousRowVersion = "";
                     tableControl = true;
                 }
                 else if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === false) {
                     html += tablePreviousRowVersion + "<br/>";
                     html += row;
-                    tableFirstRow = "";
+                    tableFirstRowColumns = [];
                     tablePreviousRowVersion = "";
                     tableActive = false;
                     tableHeader = false;
                 }
                 else if (tableHeader === false) {
-                    tableFirstRow = private.function.getTableRow(columns, "th");
+                    tableFirstRowColumns = columns;
                     tablePreviousRowVersion = row;
                     tableHeader = true;
                 }
                 else if (tableControl === true) {
-                    html += private.function.getTableRow(columns, "td");
+                    html += private.function.getTableRow(columns, "td", tableAligns);
                 }
 
                 continue;
@@ -675,8 +708,9 @@ dmuka.MarkDown = function (text) {
                 tableActive = false;
                 tableHeader = false;
                 tableControl = false;
-                tableFirstRow = "";
+                tableFirstRowColumns = [];
                 tablePreviousRowVersion = "";
+                tableAligns = [];
             }
 
             // Row is block quote
