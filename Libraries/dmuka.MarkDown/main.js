@@ -81,7 +81,7 @@ dmuka.MarkDown = function (text) {
             var nextChar = charIndex + 1 < row.length ? row[charIndex + 1] : undefined;
             var nextNextChar = charIndex + 2 < row.length ? row[charIndex + 2] : undefined;
 
-            if (nextNextChar !== '&' && ((char === '*' && nextChar === '*') || (char === '_' && nextChar === '_'))) {
+            if (nextNextChar !== '&' && nextNextChar !== undefined && ((char === '*' && nextChar === '*') || (char === '_' && nextChar === '_'))) {
                 html += "<b>";
                 charIndex += 2;
 
@@ -122,12 +122,13 @@ dmuka.MarkDown = function (text) {
             var char = row[charIndex];
             var nextChar = charIndex + 1 < row.length ? row[charIndex + 1] : undefined;
 
-            if (nextChar !== '&' && (char === '*' || char === '_')) {
+            if (nextChar !== '&' && nextChar !== undefined && (char === '*' || char === '_')) {
                 var subHtml = "<i>";
+                var beforeCharIndex = charIndex;
                 charIndex++;
 
                 var italicComplate = true;
-                var lastSubCharIndex = 0;
+                var lastSubCharIndex = charIndex;
                 for (var subCharIndex = charIndex; subCharIndex < row.length; subCharIndex++) {
                     lastSubCharIndex = subCharIndex;
                     var subChar = row[subCharIndex];
@@ -148,7 +149,7 @@ dmuka.MarkDown = function (text) {
                 }
                 else {
                     html += char;
-                    charIndex--;
+                    charIndex = beforeCharIndex;
                 }
             }
             else {
@@ -685,64 +686,69 @@ dmuka.MarkDown = function (text) {
                 continue;
             }
 
-            // Row is table
-            if (private.function.getIsTable(row) === true) {
-                listClearFunction();
+            // If state of list is close then
+            if (listLevel === -1) {
+                // Row is table
+                if (private.function.getIsTable(row) === true) {
+                    listClearFunction();
 
-                var columns = row.split('|');
-                columns.splice(0, 1);
-                if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === true) {
-                    tableAligns = private.function.getTableColumnsAlign(columns);
+                    var columns = row.split('|');
+                    columns.splice(0, 1);
+                    columns.splice(columns.length - 1, 1);
 
-                    tableActive = true;
-                    html += "<table>";
-                    html += private.function.getTableRow(tableFirstRowColumns, "th", tableAligns);
-                    tableFirstRowColumns = [];
-                    tablePreviousRowVersion = "";
-                    tableControl = true;
+                    if (tableControl === false && tableHeader === true && (private.function.getIsCol(columns[0]) === true && columns.length === tableFirstRowColumns.length)) {
+                        tableAligns = private.function.getTableColumnsAlign(columns);
+
+                        tableActive = true;
+                        html += "<table>";
+                        html += private.function.getTableRow(tableFirstRowColumns, "th", tableAligns);
+                        tableFirstRowColumns = [];
+                        tablePreviousRowVersion = "";
+                        tableControl = true;
+                    }
+                    else if (tableControl === false && tableHeader === true && (private.function.getIsCol(columns[0]) === false || columns.length !== tableFirstRowColumns.length)) {
+                        html += tablePreviousRowVersion + "<br/>";
+                        html += row;
+
+                        tableClearFunction();
+                    }
+                    else if (tableHeader === false) {
+                        tableFirstRowColumns = columns;
+                        tablePreviousRowVersion = row;
+                        tableHeader = true;
+                    }
+                    else if (tableControl === true) {
+                        html += private.function.getTableRow(columns, "td", tableAligns);
+                    }
+
+                    continue;
                 }
-                else if (tableControl === false && tableHeader === true && private.function.getIsCol(columns[0]) === false) {
-                    html += tablePreviousRowVersion + "<br/>";
-                    html += row;
-
+                else {
+                    tableAddLastDatasFunction();
                     tableClearFunction();
                 }
-                else if (tableHeader === false) {
-                    tableFirstRowColumns = columns;
-                    tablePreviousRowVersion = row;
-                    tableHeader = true;
+
+                // Row is block quote
+                var blockQuote = private.function.convertBlockQuote(row);
+                if (blockQuote.complate === true) {
+                    listClearFunction();
+
+                    html += blockQuote.html;
+
+                    addBRFunction();
+                    continue;
                 }
-                else if (tableControl === true) {
-                    html += private.function.getTableRow(columns, "td", tableAligns);
+
+                // Row is line
+                var line = private.function.convertLine(row);
+                if (line.complate === true) {
+                    listClearFunction();
+
+                    html += line.html;
+
+                    addBRFunction();
+                    continue;
                 }
-
-                continue;
-            }
-            else {
-                tableAddLastDatasFunction();
-                tableClearFunction();
-            }
-
-            // Row is block quote
-            var blockQuote = private.function.convertBlockQuote(row);
-            if (blockQuote.complate === true) {
-                listClearFunction();
-
-                html += blockQuote.html;
-
-                addBRFunction();
-                continue;
-            }
-
-            // Row is line
-            var line = private.function.convertLine(row);
-            if (line.complate === true) {
-                listClearFunction();
-
-                html += line.html;
-
-                addBRFunction();
-                continue;
             }
 
             var level = private.function.getLevel(row);
@@ -783,7 +789,11 @@ dmuka.MarkDown = function (text) {
 
                 if (checkbox.complate === false) {
                     row = private.function.addSpacesToRow(row);
-                    row = private.function.addLevelToRow(row, level);
+
+                    // If state of list is close then
+                    if (listLevel === -1) {
+                        row = private.function.addLevelToRow(row, level);
+                    }
                 }
 
                 row = private.function.convertImages(row);
