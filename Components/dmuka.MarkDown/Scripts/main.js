@@ -3,6 +3,16 @@ if (window["dmuka"] === undefined) {
     window["dmuka"] = {};
 }
 
+// This is for region converts
+/*
+    Example data :
+    
+    "javascript": function(row) {
+        // codes ...
+    }
+*/
+dmuka.MarkDownRegions = {};
+
 dmuka.MarkDown = function (text) {
     var me = this;
 
@@ -630,6 +640,25 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // Check is row region? and what is region type? and is this region end?
+    private.function.rowIsRegion = function (row) {
+        var result = {
+            complate: false,
+            begin: false,
+            type: ""
+        };
+
+        if (row.substring(0, 3) === '```') {
+            result.complate = true;
+            result.begin = row.length !== 3;
+            if (result.begin === true) {
+                result.type = row.substring(3, row.length);
+            }
+        }
+
+        return result;
+    };
+
     private.function.init = function () {
         var rows = text.split('\n');
         var html = "";
@@ -666,6 +695,16 @@ dmuka.MarkDown = function (text) {
             }
         };
 
+        // For regions
+        var regionEnable = false;
+        var regionType = "";
+        var regionRows = [];
+        var regionClearFunction = function () {
+            regionEnable = false;
+            regionType = "";
+            regionRows = [];
+        };
+
         var rowIndex = 0;
         var addBRFunction = function () {
             if (rowIndex !== rows.length - 1) {
@@ -675,6 +714,34 @@ dmuka.MarkDown = function (text) {
         for (rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             var row = rows[rowIndex];
             private.variable.hideTextsForRow = [];
+
+            var regionControl = private.function.rowIsRegion(row);
+            if (regionControl.complate === true) {
+                if (regionControl.begin === true && regionEnable === false) {
+                    regionEnable = true;
+                    regionType = regionControl.type;
+                    continue;
+                }
+                else if (regionControl.begin === false && regionEnable === true) {
+                    regionEnable = false;
+                    var convertFunction = dmuka.MarkDownRegions[regionType];
+
+                    if (convertFunction !== undefined) {
+                        html += convertFunction(regionRows);
+                    }
+                    else {
+                        html += row;
+                    }
+
+                    regionClearFunction();
+                    continue;
+                }
+            }
+
+            if (regionEnable === true) {
+                regionRows.push(row);
+                continue;
+            }
 
             // Empty row status
             if (row === '') {
@@ -834,3 +901,37 @@ dmuka.MarkDown = function (text) {
 
     return private.function.init();
 };
+
+/* Bind new regions --BEGIN */
+
+// markdown --BEGIN
+dmuka.MarkDownRegions["markdown"] = function (rows) {
+    var DOMdiv = document.createElement("div");
+    DOMdiv.classList.add("markdown");
+
+    for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        DOMdiv.innerHTML +=
+            rows[rowIndex]
+            .split('> ').join('<span class="markdown-item blockquote">&gt; </span>')
+            .split('#').join('<span class="markdown-item number-sign">#</span>')
+            .split('*').join('<span class="markdown-item asterisk">*</span>')
+            .split('_').join('<span class="markdown-item underscore">_</span>')
+            .split('+').join('<span class="markdown-item plus">+</span>')
+            .split('1.').join('<span class="markdown-item number-list">1.</span>')
+            .split('~~').join('<span class="markdown-item strikethrough">~~</span>')
+            .split('|').join('<span class="markdown-item table-char">|</span>')
+            .split('- [ ]').join('<span class="markdown-item checkbox--unchecked">- [ ]</span>')
+            .split('- [x]').join('<span class="markdown-item checkbox--checked">- [x]</span>')
+            .split('```').join('<span class="markdown-item region">```</span>')
+            .split('---').join('<span class="markdown-item line">---</span>');
+
+        if (rowIndex !== rows.length - 1) {
+            DOMdiv.innerHTML += "<br/>";
+        }
+    }
+
+    return DOMdiv.outerHTML;
+};
+// markdown --END
+
+/* Bind new regions --END */
