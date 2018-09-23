@@ -9,3 +9,31 @@
 }
 
 /* Region markdown --END*/
+
+/* Region javascript --BEGIN*/
+
+.markdown-javascript .for, .markdown-javascript .if, .markdown-javascript .else, .markdown-javascript .while, .markdown-javascript .do, .markdown-javascript .switch {
+    color: #ab00ff;
+}
+
+.markdown-javascript .var, .markdown-javascript .let, .markdown-javascript .const, .markdown-javascript .function, .markdown-javascript .false, .markdown-javascript .true, .markdown-javascript .new, .markdown-javascript .null, .markdown-javascript .undefined, .markdown-javascript .case, .markdown-javascript .default, .markdown-javascript .typeof, .markdown-javascript .return {
+    color: #0000e6;
+}
+
+.markdown-javascript .document, .markdown-javascript .window, .markdown-javascript .dollar {
+    color: rgb(160, 83, 0);
+}
+
+.markdown-javascript .special-function-or-variable {
+    color: rgb(142, 139, 0);
+}
+
+.markdown-javascript .string {
+    color: #800000;
+}
+
+.markdown-javascript .description {
+    color: green;
+}
+
+/* Region javascript --END*/

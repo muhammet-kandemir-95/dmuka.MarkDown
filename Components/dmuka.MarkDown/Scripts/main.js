@@ -45,6 +45,9 @@ dmuka.MarkDown = function (text) {
             if (char === '<') {
                 char = "&lt;";
             }
+            else if (char === '&') {
+                char = "&amp;";
+            }
 
             html += char;
         }
@@ -727,7 +730,7 @@ dmuka.MarkDown = function (text) {
                     var convertFunction = dmuka.MarkDownRegions[regionType];
 
                     if (convertFunction !== undefined) {
-                        html += convertFunction(regionRows);
+                        html += convertFunction.call(this, private, regionRows);
                     }
                     else {
                         html += row;
@@ -905,25 +908,26 @@ dmuka.MarkDown = function (text) {
 /* Bind new regions --BEGIN */
 
 // markdown --BEGIN
-dmuka.MarkDownRegions["markdown"] = function (rows) {
+dmuka.MarkDownRegions["markdown"] = function (private, rows) {
     var DOMdiv = document.createElement("div");
     DOMdiv.classList.add("markdown");
 
     for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         DOMdiv.innerHTML +=
             rows[rowIndex]
-            .split('> ').join('<span class="markdown-item blockquote">&gt; </span>')
-            .split('#').join('<span class="markdown-item number-sign">#</span>')
-            .split('*').join('<span class="markdown-item asterisk">*</span>')
-            .split('_').join('<span class="markdown-item underscore">_</span>')
-            .split('+').join('<span class="markdown-item plus">+</span>')
-            .split('1.').join('<span class="markdown-item number-list">1.</span>')
-            .split('~~').join('<span class="markdown-item strikethrough">~~</span>')
-            .split('|').join('<span class="markdown-item table-char">|</span>')
-            .split('- [ ]').join('<span class="markdown-item checkbox--unchecked">- [ ]</span>')
-            .split('- [x]').join('<span class="markdown-item checkbox--checked">- [x]</span>')
-            .split('```').join('<span class="markdown-item region">```</span>')
-            .split('---').join('<span class="markdown-item line">---</span>');
+                .split(' ').join('&nbsp;')
+                .split('>&nbsp;').join('<span class="markdown-item blockquote">&gt;&nbsp;</span>')
+                .split('#').join('<span class="markdown-item number-sign">#</span>')
+                .split('*').join('<span class="markdown-item asterisk">*</span>')
+                .split('_').join('<span class="markdown-item underscore">_</span>')
+                .split('+').join('<span class="markdown-item plus">+</span>')
+                .split('1.').join('<span class="markdown-item number-list">1.</span>')
+                .split('~~').join('<span class="markdown-item strikethrough">~~</span>')
+                .split('|').join('<span class="markdown-item table-char">|</span>')
+                .split('-&nbsp;[&nbsp;]').join('<span class="markdown-item checkbox--unchecked">-&nbsp;[&nbsp;]</span>')
+                .split('-&nbsp;[x]').join('<span class="markdown-item checkbox--checked">-&nbsp;[x]</span>')
+                .split('```').join('<span class="markdown-item region">```</span>')
+                .split('---').join('<span class="markdown-item line">---</span>');
 
         if (rowIndex !== rows.length - 1) {
             DOMdiv.innerHTML += "<br/>";
@@ -933,5 +937,173 @@ dmuka.MarkDownRegions["markdown"] = function (rows) {
     return DOMdiv.outerHTML;
 };
 // markdown --END
+
+// javascript --BEGIN
+dmuka.MarkDownRegions["javascript"] = function (private, rows) {
+    function convertWord(word) {
+        switch (word) {
+            case "function": return "<span class='function'>" + word + "</span>";
+            case "document": return "<span class='document'>" + word + "</span>";
+            case "window": return "<span class='window'>" + word + "</span>";
+            case "var": return "<span class='var'>" + word + "</span>";
+            case "new": return "<span class='new'>" + word + "</span>";
+            case "let": return "<span class='let'>" + word + "</span>";
+            case "const": return "<span class='const'>" + word + "</span>";
+            case "typeof": return "<span class='typeof'>" + word + "</span>";
+            case "case": return "<span class='case'>" + word + "</span>";
+            case "default": return "<span class='default'>" + word + "</span>";
+            case "switch": return "<span class='switch'>" + word + "</span>";
+            case "for": return "<span class='for'>" + word + "</span>";
+            case "while": return "<span class='while'>" + word + "</span>";
+            case "if": return "<span class='if'>" + word + "</span>";
+            case "else": return "<span class='else'>" + word + "</span>";
+            case "do": return "<span class='do'>" + word + "</span>";
+            case "return": return "<span class='return'>" + word + "</span>";
+            case "true": return "<span class='true'>" + word + "</span>";
+            case "false": return "<span class='false'>" + word + "</span>";
+            case "null": return "<span class='null'>" + word + "</span>";
+            case "undefined": return "<span class='undefined'>" + word + "</span>";
+            case "$": return "<span class='dollar'>" + word + "</span>";
+            default: return word;
+        }
+    }
+
+    var DOMdiv = document.createElement("div");
+    DOMdiv.classList.add("markdown-javascript");
+
+    var descriptionEnable = false;
+    var descriptionClosable = true;
+    var html = "";
+    for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        var row = rows[rowIndex];
+        row = private.function.clearHTMLInjection(row);
+        row = private.function.addSpacesToRow(row);
+
+        var doubleQuoteEnable = false;
+        var quoteEnable = false;
+
+        var htmlForRow = "";
+        var word = "";
+        var beforeSplitVariableOfFunction = false;
+        if (descriptionClosable === false) {
+            htmlForRow += '</span>';
+            descriptionEnable = false;
+        }
+        descriptionClosable = true;
+
+        for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
+            var rowChar = row[rowCharIndex];
+            var rowCharNext = row[rowCharIndex + 1];
+
+            if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
+                descriptionEnable = true;
+                descriptionClosable = false;
+                htmlForRow += '<span class="description">/';
+            }
+            else if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '*') {
+                htmlForRow += '<span class="description">/';
+                descriptionEnable = true;
+            }
+            else if (descriptionClosable === true && quoteEnable === false && doubleQuoteEnable === false && rowChar === '*' && rowCharNext === '/') {
+                descriptionEnable = true;
+                htmlForRow += '*/</span>';
+                rowCharIndex++;
+            }
+            else if (descriptionEnable === true) {
+                htmlForRow += rowChar;
+            }
+            else if (rowChar === '"') {
+                if (quoteEnable === false) {
+                    if (doubleQuoteEnable === false) {
+                        htmlForRow += convertWord(word);
+                        word = "";
+
+                        htmlForRow += '<span class="string">"';
+                    }
+                    else {
+                        htmlForRow += '"</span>';
+                    }
+                    doubleQuoteEnable = doubleQuoteEnable === false;
+                }
+                else {
+                    htmlForRow += rowChar;
+                }
+            }
+            else if (rowChar === "'") {
+                if (doubleQuoteEnable === false) {
+                    if (quoteEnable === false) {
+                        htmlForRow += convertWord(word);
+                        word = "";
+
+                        htmlForRow += '<span class="string">' + "'";
+                    }
+                    else {
+                        htmlForRow += "'" + '</span>';
+                    }
+                    quoteEnable = quoteEnable === false;
+                }
+                else {
+                    htmlForRow += rowChar;
+                }
+            }
+            else if (doubleQuoteEnable === true || quoteEnable === true) {
+                htmlForRow += rowChar;
+            }
+            else if (".".indexOf(rowChar) >= 0) {
+                beforeSplitVariableOfFunction = true;
+                htmlForRow += convertWord(word);
+                word = "";
+
+                htmlForRow += rowChar;
+            }
+            else if ("()".indexOf(rowChar) >= 0) {
+                if (beforeSplitVariableOfFunction === true) {
+                    htmlForRow += "<span class='special-function-or-variable'>" + convertWord(word) + "</span>";
+                }
+                else {
+                    htmlForRow += convertWord(word);
+                }
+                beforeSplitVariableOfFunction = false;
+                word = "";
+
+                htmlForRow += rowChar;
+            }
+            else if (";[]{} ?||&&!===+-/*^".indexOf(rowChar) >= 0) {
+                htmlForRow += convertWord(word);
+                beforeSplitVariableOfFunction = false;
+                word = "";
+
+                htmlForRow += rowChar;
+            }
+            else {
+                word += rowChar;
+            }
+        }
+
+        if (quoteEnable === true) {
+            htmlForRow += "'" + '</span>';
+        }
+        else if (doubleQuoteEnable === true) {
+            htmlForRow += '"</span>';
+        }
+        else if (word !== "") {
+            htmlForRow += convertWord(word);
+        }
+
+        html += htmlForRow;
+
+        if (rowIndex !== rows.length - 1) {
+            html += "<br/>";
+        }
+    }
+
+    if (descriptionEnable === true) {
+        html += '</span>';
+    }
+
+    DOMdiv.innerHTML = html;
+    return DOMdiv.outerHTML;
+};
+// javascript --END
 
 /* Bind new regions --END */
