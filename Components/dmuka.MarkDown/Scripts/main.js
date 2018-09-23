@@ -1005,7 +1005,7 @@ dmuka.MarkDownRegions["javascript"] = function (private, rows) {
                 descriptionEnable = true;
             }
             else if (descriptionClosable === true && quoteEnable === false && doubleQuoteEnable === false && rowChar === '*' && rowCharNext === '/') {
-                descriptionEnable = true;
+                descriptionEnable = false;
                 htmlForRow += '*/</span>';
                 rowCharIndex++;
             }
