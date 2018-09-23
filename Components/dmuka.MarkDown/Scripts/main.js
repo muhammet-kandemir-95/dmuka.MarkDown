@@ -899,6 +899,168 @@ dmuka.MarkDown = function (text) {
         return html;
     };
 
+    // For Components --BEGIN
+
+    // This function working by javascript and csharp syntax. It's not for working only javascript or only csharp.
+    // So you may think bad about this code and may remove some codes. Please don't it :D
+    // But when you needed extreme process, you should write new method by your programming language
+    private.function.MarkDownRegionConvertByProgrammingLanguage = function(rows, convertWord) {
+        var descriptionEnable = false;
+        var descriptionClosable = true;
+        var doubleQuoteForMultipleRowEnable = false;
+        var html = "";
+        for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            var row = rows[rowIndex];
+            row = private.function.clearHTMLInjection(row);
+            row = private.function.addSpacesToRow(row);
+    
+            var doubleQuoteEnable = doubleQuoteForMultipleRowEnable;
+            var quoteEnable = false;
+    
+            var htmlForRow = "";
+            var word = "";
+            var beforeSplitVariableOfFunction = false;
+            if (descriptionClosable === false) {
+                htmlForRow += '</span>';
+                descriptionEnable = false;
+            }
+            descriptionClosable = true;
+    
+            for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
+                var rowChar = row[rowCharIndex];
+                var rowCharPrevious = row[rowCharIndex - 1];
+                var rowCharNext = row[rowCharIndex + 1];
+    
+                if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
+                    descriptionEnable = true;
+                    descriptionClosable = false;
+                    htmlForRow += '<span class="description">/';
+                }
+                else if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '*') {
+                    htmlForRow += '<span class="description">/';
+                    descriptionEnable = true;
+                }
+                else if (descriptionClosable === true && quoteEnable === false && doubleQuoteEnable === false && rowChar === '*' && rowCharNext === '/') {
+                    descriptionEnable = false;
+                    htmlForRow += '*/</span>';
+                    rowCharIndex++;
+                }
+                else if (descriptionEnable === true) {
+                    htmlForRow += rowChar;
+                }
+                else if(doubleQuoteForMultipleRowEnable === true && rowChar === '"' && rowCharNext === '"')
+                {
+                    rowCharIndex++;
+                    htmlForRow += '""';
+                }
+                else if(doubleQuoteForMultipleRowEnable === true && rowChar === '"' && rowCharNext !== '"')
+                {
+                    htmlForRow += '"</span>';
+                    doubleQuoteEnable = false;
+                    doubleQuoteForMultipleRowEnable = false;
+                }
+                else if ((rowCharPrevious !== '\\' && doubleQuoteForMultipleRowEnable === false) && rowChar === '"') {
+                    if (quoteEnable === false) {
+                        if (doubleQuoteEnable === false) {
+                            htmlForRow += convertWord(word);
+                            word = "";
+    
+                            htmlForRow += '<span class="string">"';
+                        }
+                        else {
+                            htmlForRow += '"</span>';
+                        }
+                        doubleQuoteEnable = doubleQuoteEnable === false;
+                    }
+                    else {
+                        htmlForRow += rowChar;
+                    }
+                }
+                else if (rowCharPrevious !== '\\' && rowChar === "'") {
+                    if (doubleQuoteEnable === false) {
+                        if (quoteEnable === false) {
+                            htmlForRow += convertWord(word);
+                            word = "";
+    
+                            htmlForRow += '<span class="string">' + "'";
+                        }
+                        else {
+                            htmlForRow += "'" + '</span>';
+                        }
+                        quoteEnable = quoteEnable === false;
+                    }
+                    else {
+                        htmlForRow += rowChar;
+                    }
+                }
+                else if (doubleQuoteEnable === true || quoteEnable === true) {
+                    htmlForRow += rowChar;
+                }
+                else if(rowChar === "@" && rowCharNext === '"') {
+                    doubleQuoteEnable = true;
+                    doubleQuoteForMultipleRowEnable = true;
+                    rowCharIndex++;
+                    htmlForRow += '<span class="string">' + '@"';
+                }
+                else if (".".indexOf(rowChar) >= 0) {
+                    beforeSplitVariableOfFunction = true;
+                    htmlForRow += convertWord(word);
+                    word = "";
+    
+                    htmlForRow += rowChar;
+                }
+                else if ("()".indexOf(rowChar) >= 0) {
+                    if (beforeSplitVariableOfFunction === true) {
+                        htmlForRow += "<span class='special-function-or-variable'>" + convertWord(word) + "</span>";
+                    }
+                    else {
+                        htmlForRow += convertWord(word);
+                    }
+                    beforeSplitVariableOfFunction = false;
+                    word = "";
+    
+                    htmlForRow += rowChar;
+                }
+                else if (";[]{} ?||&&!===+-/*^".indexOf(rowChar) >= 0) {
+                    htmlForRow += convertWord(word);
+                    beforeSplitVariableOfFunction = false;
+                    word = "";
+    
+                    htmlForRow += rowChar;
+                }
+                else {
+                    word += rowChar;
+                }
+            }
+    
+            if (quoteEnable === true) {
+                htmlForRow += '</span>';
+            }
+            else if (doubleQuoteEnable === true && doubleQuoteForMultipleRowEnable === false) {
+                htmlForRow += '</span>';
+            }
+            else if (word !== "") {
+                htmlForRow += convertWord(word);
+            }
+    
+            html += htmlForRow;
+    
+            if (rowIndex !== rows.length - 1) {
+                html += "<br/>";
+            }
+        }
+    
+        if (descriptionEnable === true) {
+            html += '</span>';
+        }
+        if (doubleQuoteForMultipleRowEnable === true) {
+            html += '</span>';
+        }
+    
+        return html;
+    };
+    // For Components --END
+
     // --------------------
     /* Functions --END */
 
@@ -970,138 +1132,7 @@ dmuka.MarkDownRegions["javascript"] = function (private, rows) {
 
     var DOMdiv = document.createElement("div");
     DOMdiv.classList.add("markdown-javascript");
-
-    var descriptionEnable = false;
-    var descriptionClosable = true;
-    var html = "";
-    for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-        var row = rows[rowIndex];
-        row = private.function.clearHTMLInjection(row);
-        row = private.function.addSpacesToRow(row);
-
-        var doubleQuoteEnable = false;
-        var quoteEnable = false;
-
-        var htmlForRow = "";
-        var word = "";
-        var beforeSplitVariableOfFunction = false;
-        if (descriptionClosable === false) {
-            htmlForRow += '</span>';
-            descriptionEnable = false;
-        }
-        descriptionClosable = true;
-
-        for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
-            var rowChar = row[rowCharIndex];
-            var rowCharNext = row[rowCharIndex + 1];
-
-            if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
-                descriptionEnable = true;
-                descriptionClosable = false;
-                htmlForRow += '<span class="description">/';
-            }
-            else if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '*') {
-                htmlForRow += '<span class="description">/';
-                descriptionEnable = true;
-            }
-            else if (descriptionClosable === true && quoteEnable === false && doubleQuoteEnable === false && rowChar === '*' && rowCharNext === '/') {
-                descriptionEnable = false;
-                htmlForRow += '*/</span>';
-                rowCharIndex++;
-            }
-            else if (descriptionEnable === true) {
-                htmlForRow += rowChar;
-            }
-            else if (rowChar === '"') {
-                if (quoteEnable === false) {
-                    if (doubleQuoteEnable === false) {
-                        htmlForRow += convertWord(word);
-                        word = "";
-
-                        htmlForRow += '<span class="string">"';
-                    }
-                    else {
-                        htmlForRow += '"</span>';
-                    }
-                    doubleQuoteEnable = doubleQuoteEnable === false;
-                }
-                else {
-                    htmlForRow += rowChar;
-                }
-            }
-            else if (rowChar === "'") {
-                if (doubleQuoteEnable === false) {
-                    if (quoteEnable === false) {
-                        htmlForRow += convertWord(word);
-                        word = "";
-
-                        htmlForRow += '<span class="string">' + "'";
-                    }
-                    else {
-                        htmlForRow += "'" + '</span>';
-                    }
-                    quoteEnable = quoteEnable === false;
-                }
-                else {
-                    htmlForRow += rowChar;
-                }
-            }
-            else if (doubleQuoteEnable === true || quoteEnable === true) {
-                htmlForRow += rowChar;
-            }
-            else if (".".indexOf(rowChar) >= 0) {
-                beforeSplitVariableOfFunction = true;
-                htmlForRow += convertWord(word);
-                word = "";
-
-                htmlForRow += rowChar;
-            }
-            else if ("()".indexOf(rowChar) >= 0) {
-                if (beforeSplitVariableOfFunction === true) {
-                    htmlForRow += "<span class='special-function-or-variable'>" + convertWord(word) + "</span>";
-                }
-                else {
-                    htmlForRow += convertWord(word);
-                }
-                beforeSplitVariableOfFunction = false;
-                word = "";
-
-                htmlForRow += rowChar;
-            }
-            else if (";[]{} ?||&&!===+-/*^".indexOf(rowChar) >= 0) {
-                htmlForRow += convertWord(word);
-                beforeSplitVariableOfFunction = false;
-                word = "";
-
-                htmlForRow += rowChar;
-            }
-            else {
-                word += rowChar;
-            }
-        }
-
-        if (quoteEnable === true) {
-            htmlForRow += "'" + '</span>';
-        }
-        else if (doubleQuoteEnable === true) {
-            htmlForRow += '"</span>';
-        }
-        else if (word !== "") {
-            htmlForRow += convertWord(word);
-        }
-
-        html += htmlForRow;
-
-        if (rowIndex !== rows.length - 1) {
-            html += "<br/>";
-        }
-    }
-
-    if (descriptionEnable === true) {
-        html += '</span>';
-    }
-
-    DOMdiv.innerHTML = html;
+    DOMdiv.innerHTML = private.function.MarkDownRegionConvertByProgrammingLanguage(rows, convertWord);
     return DOMdiv.outerHTML;
 };
 // javascript --END
