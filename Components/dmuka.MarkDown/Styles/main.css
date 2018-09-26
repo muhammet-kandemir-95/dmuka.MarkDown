@@ -12,11 +12,11 @@
 
 /* Region javascript --BEGIN*/
 
-.markdown-javascript .for, .markdown-javascript .if, .markdown-javascript .else, .markdown-javascript .while, .markdown-javascript .do, .markdown-javascript .switch {
-    color: #ab00ff;
+.markdown-javascript .try, .markdown-javascript .catch, .markdown-javascript .for, .markdown-javascript .if, .markdown-javascript .else, .markdown-javascript .while, .markdown-javascript .do, .markdown-javascript .switch {
+    color: #69158f;
 }
 
-.markdown-javascript .var, .markdown-javascript .let, .markdown-javascript .const, .markdown-javascript .function, .markdown-javascript .false, .markdown-javascript .true, .markdown-javascript .new, .markdown-javascript .null, .markdown-javascript .undefined, .markdown-javascript .case, .markdown-javascript .default, .markdown-javascript .typeof, .markdown-javascript .return {
+.markdown-javascript .this, .markdown-javascript .break, .markdown-javascript .continue, .markdown-javascript .var, .markdown-javascript .let, .markdown-javascript .const, .markdown-javascript .function, .markdown-javascript .false, .markdown-javascript .true, .markdown-javascript .new, .markdown-javascript .null, .markdown-javascript .undefined, .markdown-javascript .case, .markdown-javascript .default, .markdown-javascript .typeof, .markdown-javascript .return {
     color: #0000e6;
 }
 
@@ -37,3 +37,85 @@
 }
 
 /* Region javascript --END*/
+
+/* Region csharp --BEGIN*/
+
+.markdown-csharp .try, .markdown-csharp .catch, .markdown-csharp .for, .markdown-csharp .if, .markdown-csharp .else, .markdown-csharp .while, .markdown-csharp .do, .markdown-csharp .switch {
+    color: #69158f;
+}
+
+.markdown-csharp .var,
+.markdown-csharp .new,
+.markdown-csharp .const,
+.markdown-csharp .typeof,
+.markdown-csharp .case,
+.markdown-csharp .default,
+.markdown-csharp .switch,
+.markdown-csharp .break,
+.markdown-csharp .continue,
+.markdown-csharp .return,
+.markdown-csharp .true,
+.markdown-csharp .false,
+.markdown-csharp .null,
+.markdown-csharp .async,
+.markdown-csharp .await,
+.markdown-csharp .public,
+.markdown-csharp .private,
+.markdown-csharp .protected,
+.markdown-csharp .internal,
+.markdown-csharp .static,
+.markdown-csharp .virtual,
+.markdown-csharp .override,
+.markdown-csharp .abstract,
+.markdown-csharp .sealed,
+.markdown-csharp .get,
+.markdown-csharp .set,
+.markdown-csharp .using,
+.markdown-csharp .namespace,
+.markdown-csharp .class,
+.markdown-csharp .struct,
+.markdown-csharp .stringVar,
+.markdown-csharp .bool,
+.markdown-csharp .byte,
+.markdown-csharp .sbyte,
+.markdown-csharp .short,
+.markdown-csharp .ushort,
+.markdown-csharp .int,
+.markdown-csharp .uint,
+.markdown-csharp .long,
+.markdown-csharp .ulong,
+.markdown-csharp .float,
+.markdown-csharp .double,
+.markdown-csharp .decimal,
+.markdown-csharp .throw,
+.markdown-csharp .this,
+.markdown-csharp .implicit,
+.markdown-csharp .explicit,
+.markdown-csharp .operator
+{
+    color: #0000e6;
+}
+
+.markdown-csharp ._elif,
+.markdown-csharp ._else,
+.markdown-csharp ._endif,
+.markdown-csharp ._endregion,
+.markdown-csharp ._error,
+.markdown-csharp ._if,
+.markdown-csharp ._line,
+.markdown-csharp ._pragma,
+.markdown-csharp ._region,
+.markdown-csharp ._warning
+{
+    color: #888888;
+}
+
+.markdown-csharp .string {
+    color: #800000;
+}
+
+.markdown-csharp .description {
+    color: green;
+}
+
+/* Region csharp --END*/

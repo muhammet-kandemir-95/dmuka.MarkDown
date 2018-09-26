@@ -904,7 +904,7 @@ dmuka.MarkDown = function (text) {
     // This function working by javascript and csharp syntax. It's not for working only javascript or only csharp.
     // So you may think bad about this code and may remove some codes. Please don't it :D
     // But when you needed extreme process, you should write new method by your programming language
-    private.function.MarkDownRegionConvertByProgrammingLanguage = function(rows, convertWord) {
+    private.function.MarkDownRegionConvertByProgrammingLanguage = function (rows, convertWord) {
         var descriptionEnable = false;
         var descriptionClosable = true;
         var doubleQuoteForMultipleRowEnable = false;
@@ -913,10 +913,10 @@ dmuka.MarkDown = function (text) {
             var row = rows[rowIndex];
             row = private.function.clearHTMLInjection(row);
             row = private.function.addSpacesToRow(row);
-    
+
             var doubleQuoteEnable = doubleQuoteForMultipleRowEnable;
             var quoteEnable = false;
-    
+
             var htmlForRow = "";
             var word = "";
             var beforeSplitVariableOfFunction = false;
@@ -925,12 +925,12 @@ dmuka.MarkDown = function (text) {
                 descriptionEnable = false;
             }
             descriptionClosable = true;
-    
+
             for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
                 var rowChar = row[rowCharIndex];
                 var rowCharPrevious = row[rowCharIndex - 1];
                 var rowCharNext = row[rowCharIndex + 1];
-    
+
                 if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
                     descriptionEnable = true;
                     descriptionClosable = false;
@@ -948,13 +948,11 @@ dmuka.MarkDown = function (text) {
                 else if (descriptionEnable === true) {
                     htmlForRow += rowChar;
                 }
-                else if(doubleQuoteForMultipleRowEnable === true && rowChar === '"' && rowCharNext === '"')
-                {
+                else if (doubleQuoteForMultipleRowEnable === true && rowChar === '"' && rowCharNext === '"') {
                     rowCharIndex++;
                     htmlForRow += '""';
                 }
-                else if(doubleQuoteForMultipleRowEnable === true && rowChar === '"' && rowCharNext !== '"')
-                {
+                else if (doubleQuoteForMultipleRowEnable === true && rowChar === '"' && rowCharNext !== '"') {
                     htmlForRow += '"</span>';
                     doubleQuoteEnable = false;
                     doubleQuoteForMultipleRowEnable = false;
@@ -964,7 +962,7 @@ dmuka.MarkDown = function (text) {
                         if (doubleQuoteEnable === false) {
                             htmlForRow += convertWord(word);
                             word = "";
-    
+
                             htmlForRow += '<span class="string">"';
                         }
                         else {
@@ -981,7 +979,7 @@ dmuka.MarkDown = function (text) {
                         if (quoteEnable === false) {
                             htmlForRow += convertWord(word);
                             word = "";
-    
+
                             htmlForRow += '<span class="string">' + "'";
                         }
                         else {
@@ -996,7 +994,7 @@ dmuka.MarkDown = function (text) {
                 else if (doubleQuoteEnable === true || quoteEnable === true) {
                     htmlForRow += rowChar;
                 }
-                else if(rowChar === "@" && rowCharNext === '"') {
+                else if (rowChar === "@" && rowCharNext === '"') {
                     doubleQuoteEnable = true;
                     doubleQuoteForMultipleRowEnable = true;
                     rowCharIndex++;
@@ -1006,7 +1004,7 @@ dmuka.MarkDown = function (text) {
                     beforeSplitVariableOfFunction = true;
                     htmlForRow += convertWord(word);
                     word = "";
-    
+
                     htmlForRow += rowChar;
                 }
                 else if ("()".indexOf(rowChar) >= 0) {
@@ -1018,21 +1016,21 @@ dmuka.MarkDown = function (text) {
                     }
                     beforeSplitVariableOfFunction = false;
                     word = "";
-    
+
                     htmlForRow += rowChar;
                 }
                 else if (";[]{} ?||&&!===+-/*^".indexOf(rowChar) >= 0) {
                     htmlForRow += convertWord(word);
                     beforeSplitVariableOfFunction = false;
                     word = "";
-    
+
                     htmlForRow += rowChar;
                 }
                 else {
                     word += rowChar;
                 }
             }
-    
+
             if (quoteEnable === true) {
                 htmlForRow += '</span>';
             }
@@ -1042,21 +1040,21 @@ dmuka.MarkDown = function (text) {
             else if (word !== "") {
                 htmlForRow += convertWord(word);
             }
-    
+
             html += htmlForRow;
-    
+
             if (rowIndex !== rows.length - 1) {
                 html += "<br/>";
             }
         }
-    
+
         if (descriptionEnable === true) {
             html += '</span>';
         }
         if (doubleQuoteForMultipleRowEnable === true) {
             html += '</span>';
         }
-    
+
         return html;
     };
     // For Components --END
@@ -1103,30 +1101,40 @@ dmuka.MarkDownRegions["markdown"] = function (private, rows) {
 // javascript --BEGIN
 dmuka.MarkDownRegions["javascript"] = function (private, rows) {
     function convertWord(word) {
+        function convertToSpan() {
+            return "<span class='" + word + "'>" + word + "</span>";
+        }
         switch (word) {
-            case "function": return "<span class='function'>" + word + "</span>";
-            case "document": return "<span class='document'>" + word + "</span>";
-            case "window": return "<span class='window'>" + word + "</span>";
-            case "var": return "<span class='var'>" + word + "</span>";
-            case "new": return "<span class='new'>" + word + "</span>";
-            case "let": return "<span class='let'>" + word + "</span>";
-            case "const": return "<span class='const'>" + word + "</span>";
-            case "typeof": return "<span class='typeof'>" + word + "</span>";
-            case "case": return "<span class='case'>" + word + "</span>";
-            case "default": return "<span class='default'>" + word + "</span>";
-            case "switch": return "<span class='switch'>" + word + "</span>";
-            case "for": return "<span class='for'>" + word + "</span>";
-            case "while": return "<span class='while'>" + word + "</span>";
-            case "if": return "<span class='if'>" + word + "</span>";
-            case "else": return "<span class='else'>" + word + "</span>";
-            case "do": return "<span class='do'>" + word + "</span>";
-            case "return": return "<span class='return'>" + word + "</span>";
-            case "true": return "<span class='true'>" + word + "</span>";
-            case "false": return "<span class='false'>" + word + "</span>";
-            case "null": return "<span class='null'>" + word + "</span>";
-            case "undefined": return "<span class='undefined'>" + word + "</span>";
-            case "$": return "<span class='dollar'>" + word + "</span>";
-            default: return word;
+            case "function":
+            case "document":
+            case "window":
+            case "var": 
+            case "new": 
+            case "let":
+            case "const": 
+            case "typeof":
+            case "case":
+            case "default": 
+            case "switch":
+            case "for": 
+            case "while": 
+            case "break":
+            case "continue": 
+            case "if": 
+            case "else": 
+            case "do":
+            case "try":
+            case "catch":
+            case "return": 
+            case "true": 
+            case "false": 
+            case "null":
+            case "undefined":
+            case "$":
+            case "this":
+            return convertToSpan();
+            default: 
+            return word;
         }
     }
 
@@ -1136,5 +1144,92 @@ dmuka.MarkDownRegions["javascript"] = function (private, rows) {
     return DOMdiv.outerHTML;
 };
 // javascript --END
+
+// csharp --BEGIN
+dmuka.MarkDownRegions["csharp"] = function (private, rows) {
+    function convertWord(word) {
+        function convertToSpan() {
+            return "<span class='" + word.split('#').join('_') + "'>" + word + "</span>";
+        }
+        switch (word) {
+            case "var":
+            case "new":
+            case "const": 
+            case "typeof":
+            case "case": 
+            case "default":
+            case "switch": 
+            case "for": 
+            case "while": 
+            case "break": 
+            case "continue":
+            case "if": 
+            case "else":
+            case "do": 
+            case "return":
+            case "true":
+            case "false":
+            case "null":
+            case "async":
+            case "await":
+            case "public":
+            case "private":
+            case "protected":
+            case "internal":
+            case "static":
+            case "virtual":
+            case "override":
+            case "abstract": 
+            case "sealed":
+            case "get":
+            case "set":
+            case "using":
+            case "namespace": 
+            case "class":
+            case "struct": 
+            // Variables --BEGIN
+            case "stringVar":
+            case "bool": 
+            case "byte": 
+            case "sbyte": 
+            case "short": 
+            case "ushort": 
+            case "int":
+            case "uint":
+            case "long":
+            case "ulong":
+            case "float":
+            case "double":
+            case "decimal":
+            // Variables --END
+            case "throw":
+            case "this":
+            case "implicit":
+            case "explicit":
+            case "operator":
+            case "try":
+            case "catch":
+            case "#elif":
+            case "#else":
+            case "#endif":
+            case "#endregion":
+            case "#error":
+            case "#if":
+            case "#line":
+            case "#pragma":
+            case "#region":
+            case "#warning":
+            return convertToSpan();
+            default: 
+            return word;
+        }
+    }
+
+    var DOMdiv = document.createElement("div");
+    DOMdiv.classList.add("markdown-csharp");
+    DOMdiv.innerHTML = private.function.MarkDownRegionConvertByProgrammingLanguage(rows, convertWord);
+    return DOMdiv.outerHTML;
+};
+// csharp --END
 
 /* Bind new regions --END */
