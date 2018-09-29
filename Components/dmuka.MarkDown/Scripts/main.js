@@ -904,7 +904,7 @@ dmuka.MarkDown = function (text) {
     // This function working by javascript and csharp syntax. It's not for working only javascript or only csharp.
     // So you may think bad about this code and may remove some codes. Please don't it :D
     // But when you needed extreme process, you should write new method by your programming language
-    private.function.MarkDownRegionConvertByProgrammingLanguage = function (rows, convertWord) {
+    private.function.markDownRegionConvertByProgrammingLanguage = function (rows, convertWord) {
         var descriptionEnable = false;
         var descriptionClosable = true;
         var doubleQuoteForMultipleRowEnable = false;
@@ -1108,39 +1108,39 @@ dmuka.MarkDownRegions["javascript"] = function (private, rows) {
             case "function":
             case "document":
             case "window":
-            case "var": 
-            case "new": 
+            case "var":
+            case "new":
             case "let":
-            case "const": 
+            case "const":
             case "typeof":
             case "case":
-            case "default": 
+            case "default":
             case "switch":
-            case "for": 
-            case "while": 
+            case "for":
+            case "while":
             case "break":
-            case "continue": 
-            case "if": 
-            case "else": 
+            case "continue":
+            case "if":
+            case "else":
             case "do":
             case "try":
             case "catch":
-            case "return": 
-            case "true": 
-            case "false": 
+            case "return":
+            case "true":
+            case "false":
             case "null":
             case "undefined":
             case "$":
             case "this":
-            return convertToSpan();
-            default: 
-            return word;
+                return convertToSpan();
+            default:
+                return word;
         }
     }
 
     var DOMdiv = document.createElement("div");
     DOMdiv.classList.add("markdown-javascript");
-    DOMdiv.innerHTML = private.function.MarkDownRegionConvertByProgrammingLanguage(rows, convertWord);
+    DOMdiv.innerHTML = private.function.markDownRegionConvertByProgrammingLanguage(rows, convertWord);
     return DOMdiv.outerHTML;
 };
 // javascript --END
@@ -1154,18 +1154,18 @@ dmuka.MarkDownRegions["csharp"] = function (private, rows) {
         switch (word) {
             case "var":
             case "new":
-            case "const": 
+            case "const":
             case "typeof":
-            case "case": 
+            case "case":
             case "default":
-            case "switch": 
-            case "for": 
-            case "while": 
-            case "break": 
+            case "switch":
+            case "for":
+            case "while":
+            case "break":
             case "continue":
-            case "if": 
+            case "if":
             case "else":
-            case "do": 
+            case "do":
             case "return":
             case "true":
             case "false":
@@ -1179,21 +1179,21 @@ dmuka.MarkDownRegions["csharp"] = function (private, rows) {
             case "static":
             case "virtual":
             case "override":
-            case "abstract": 
+            case "abstract":
             case "sealed":
             case "get":
             case "set":
             case "using":
-            case "namespace": 
+            case "namespace":
             case "class":
-            case "struct": 
+            case "struct":
             // Variables --BEGIN
             case "stringVar":
-            case "bool": 
-            case "byte": 
-            case "sbyte": 
-            case "short": 
-            case "ushort": 
+            case "bool":
+            case "byte":
+            case "sbyte":
+            case "short":
+            case "ushort":
             case "int":
             case "uint":
             case "long":
@@ -1219,15 +1219,15 @@ dmuka.MarkDownRegions["csharp"] = function (private, rows) {
             case "#pragma":
             case "#region":
             case "#warning":
-            return convertToSpan();
-            default: 
-            return word;
+                return convertToSpan();
+            default:
+                return word;
         }
     }
 
     var DOMdiv = document.createElement("div");
     DOMdiv.classList.add("markdown-csharp");
-    DOMdiv.innerHTML = private.function.MarkDownRegionConvertByProgrammingLanguage(rows, convertWord);
+    DOMdiv.innerHTML = private.function.markDownRegionConvertByProgrammingLanguage(rows, convertWord);
     return DOMdiv.outerHTML;
 };
 // csharp --END
