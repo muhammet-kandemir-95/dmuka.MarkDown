@@ -1165,6 +1165,8 @@ dmuka.MarkDown.Regions["csharp"] = function (private, rows) {
             return "<span class='" + word.split('#').join('_') + "'>" + word + "</span>";
         }
         switch (word) {
+            case "string":
+            return "<span class='stringVar'>string</span>";
             case "var":
             case "new":
             case "const":
@@ -1189,6 +1191,7 @@ dmuka.MarkDown.Regions["csharp"] = function (private, rows) {
             case "private":
             case "protected":
             case "internal":
+            case "interface":
             case "static":
             case "virtual":
             case "override":
@@ -1200,8 +1203,11 @@ dmuka.MarkDown.Regions["csharp"] = function (private, rows) {
             case "namespace":
             case "class":
             case "struct":
+            case "checked":
+            case "unchecked":
+            case "lock":
+            case "void":
             // Variables --BEGIN
-            case "stringVar":
             case "bool":
             case "byte":
             case "sbyte":
