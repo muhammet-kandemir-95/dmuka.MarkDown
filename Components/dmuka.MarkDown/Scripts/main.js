@@ -929,6 +929,7 @@ dmuka.MarkDown.Convert = function (text) {
             var row = rows[rowIndex];
             var doubleQuoteEnable = doubleQuoteForMultipleRowEnable;
             var quoteEnable = false;
+            var regexEnable = false;
 
             var htmlForRow = "";
             var word = "";
@@ -944,7 +945,15 @@ dmuka.MarkDown.Convert = function (text) {
                 var rowCharPrevious = private.function.clearUneccessaryCharacters(row[rowCharIndex - 1]);
                 var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
 
-                if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
+                if (rowChar === "/" && rowCharPrevious !== "/" && rowCharNext !== "&nbsp;" && rowCharNext !== "/" && rowCharNext !== "*" && descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && regexEnable === false) {
+                    regexEnable = true;
+                    htmlForRow += '<span class="regex">/';
+                }
+                else if (rowCharPrevious !== "\\" && rowChar === "/" && descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && regexEnable === true) {
+                    regexEnable = false;
+                    htmlForRow += '/</span>';
+                }
+                else if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
                     descriptionEnable = true;
                     descriptionClosable = false;
                     htmlForRow += '<span class="description">/';
@@ -1050,6 +1059,9 @@ dmuka.MarkDown.Convert = function (text) {
             if (quoteEnable === true) {
                 htmlForRow += '</span>';
             }
+            if (regexEnable === true) {
+                htmlForRow += '</span>';
+            }
             if (doubleQuoteEnable === true && doubleQuoteForMultipleRowEnable === false) {
                 htmlForRow += '</span>';
             }
@@ -1082,11 +1094,11 @@ dmuka.MarkDown.Convert = function (text) {
 
 // markdown --BEGIN
 dmuka.MarkDown.Regions["markdown"] = function (private, rows) {
-    var DOMdiv = document.createElement("div");
-    DOMdiv.classList.add("markdown");
+    var DOMspan = document.createElement("span");
+    DOMspan.classList.add("markdown");
 
     for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-        DOMdiv.innerHTML +=
+        DOMspan.innerHTML +=
             rows[rowIndex]
                 .split(' ').join('&nbsp;')
                 .split('>&nbsp;').join('<span class="markdown-item blockquote">&gt;&nbsp;</span>')
@@ -1103,11 +1115,11 @@ dmuka.MarkDown.Regions["markdown"] = function (private, rows) {
                 .split('---').join('<span class="markdown-item line">---</span>');
 
         if (rowIndex !== rows.length - 1) {
-            DOMdiv.innerHTML += "<br/>";
+            DOMspan.innerHTML += "<br/>";
         }
     }
 
-    return DOMdiv.outerHTML;
+    return DOMspan.outerHTML;
 };
 // markdown --END
 
@@ -1151,10 +1163,10 @@ dmuka.MarkDown.Regions["javascript"] = function (private, rows) {
         }
     }
 
-    var DOMdiv = document.createElement("div");
-    DOMdiv.classList.add("markdown-javascript");
-    DOMdiv.innerHTML = private.function.markDownRegionConvertByProgrammingLanguage(rows, convertWord);
-    return DOMdiv.outerHTML;
+    var DOMspan = document.createElement("span");
+    DOMspan.classList.add("markdown-javascript");
+    DOMspan.innerHTML = private.function.markDownRegionConvertByProgrammingLanguage(rows, convertWord);
+    return DOMspan.outerHTML;
 };
 // javascript --END
 
@@ -1244,30 +1256,18 @@ dmuka.MarkDown.Regions["csharp"] = function (private, rows) {
         }
     }
 
-    var DOMdiv = document.createElement("div");
-    DOMdiv.classList.add("markdown-csharp");
-    DOMdiv.innerHTML = private.function.markDownRegionConvertByProgrammingLanguage(rows, convertWord);
-    return DOMdiv.outerHTML;
+    var DOMspan = document.createElement("span");
+    DOMspan.classList.add("markdown-csharp");
+    DOMspan.innerHTML = private.function.markDownRegionConvertByProgrammingLanguage(rows, convertWord);
+    return DOMspan.outerHTML;
 };
 // csharp --END
 
 // css --BEGIN
 dmuka.MarkDown.Regions["css"] = function (private, rows) {
-    function convertWord(word) {
-        function convertToSpan() {
-            return "<span class='" + word + "'>" + word + "</span>";
-        }
-        switch (word) {
-            case "warning":
-                return convertToSpan();
-            default:
-                return word;
-        }
-    }
-
-    var DOMdiv = document.createElement("div");
-    DOMdiv.classList.add("markdown-css");
-    DOMdiv.innerHTML = (function (private, rows, convertWord) {
+    var DOMspan = document.createElement("span");
+    DOMspan.classList.add("markdown-css");
+    DOMspan.innerHTML = (function (private, rows) {
         var html = "";
 
         var descriptionEnable = false;
@@ -1371,139 +1371,258 @@ dmuka.MarkDown.Regions["css"] = function (private, rows) {
         }
 
         return html;
-    })(private, rows, convertWord);
+    })(private, rows);
 
-    return DOMdiv.outerHTML;
+    return DOMspan.outerHTML;
 };
 // css --END
 
-// css --BEGIN
-dmuka.MarkDown.Regions["css"] = function (private, rows) {
-    function convertWord(word) {
-        function convertToSpan() {
-            return "<span class='" + word + "'>" + word + "</span>";
-        }
-        switch (word) {
-            case "warning":
-                return convertToSpan();
-            default:
-                return word;
-        }
-    }
-
-    var DOMdiv = document.createElement("div");
-    DOMdiv.classList.add("markdown-css");
-    DOMdiv.innerHTML = (function (private, rows, convertWord) {
+// html --BEGIN
+dmuka.MarkDown.Regions["html"] = function (private, rows) {
+    var this_ = this;
+    var DOMspan = document.createElement("span");
+    DOMspan.classList.add("markdown-html");
+    DOMspan.innerHTML = (function (private, rows) {
         var html = "";
 
+        var elementsCounter = 0;
         var descriptionEnable = false;
-        var cssEnable = false;
+        var openTagEnable = false;
+        var closeTagEnable = false;
+        var quoteEnable = false;
+        var doubleQuoteEnable = false;
+        var lastTagName = "";
+
+        var lastCharIndexForRecursive = 0;
         for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             var row = rows[rowIndex];
-            row = private.function.clearHTMLInjection(row);
 
-            var doubleQuoteEnable = false;
-            var quoteEnable = false;
-            var splitEnable = false;
-            var htmlForRow = "";
-            for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
-                var rowChar = row[rowCharIndex];
-                rowChar = rowChar === " " ? "&nbsp;" : rowChar;
-                var rowCharNext = row[rowCharIndex + 1];
-                rowChar = rowChar === " " ? "&nbsp;" : rowChar;
+            for (var rowCharIndex = lastCharIndexForRecursive; rowCharIndex < row.length; rowCharIndex++) {
+                lastCharIndexForRecursive = 0;
+                var rowChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
+                var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
+                var rowCharNextNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 2]);
+                var rowCharNextNextNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 3]);
 
-                if (rowChar === '/' && rowCharNext === '*' && descriptionEnable === false) {
+                if (rowChar === "&lt;" && rowCharNext === "!" && rowCharNextNext === "-" && rowCharNextNextNext === "-" && descriptionEnable === false) {
                     descriptionEnable = true;
-                    htmlForRow += "<span class='description'>/*";
-                    rowCharIndex++;
+                    html += "<span class='description'>&lt;!--";
+                    rowCharIndex += 3;
                 }
-                else if (rowChar === '*' && rowCharNext === '/' && descriptionEnable === true) {
+                else if (rowChar === "-" && rowCharNext === "-" && rowCharNextNext === ">" && descriptionEnable === true) {
                     descriptionEnable = false;
-                    htmlForRow += "*/</span>";
-                    rowCharIndex++;
+                    html += "--></span>";
+                    rowCharIndex += 2;
                 }
                 else if (descriptionEnable === true) {
-                    htmlForRow += rowChar;
+                    html += rowChar;
                 }
-                else if (rowChar === '"') {
+                else if (rowChar === "&lt;" && rowCharNext === "/" && elementsCounter > 0 && closeTagEnable === false) {
+                    closeTagEnable = true;
+                    html += "<span class='close-tag'>&lt;/";
+                    rowCharIndex++;
+                    elementsCounter--;
+                }
+                else if (rowChar === "&lt;" && rowCharNext !== "/" && openTagEnable === false) {
+                    openTagEnable = true;
+                    html += "<span class='open-tag'>&lt;";
+
+                    var tagName = "";
+                    var lastCharForTagName = "";
+                    rowCharIndex++;
+                    for (; rowCharIndex < row.length; rowCharIndex++) {
+                        var rowSubChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
+
+                        if (rowSubChar === "&nbsp;" || rowSubChar === ">") {
+                            lastCharForTagName = rowSubChar;
+                            rowCharIndex--;
+                            break;
+                        }
+                        
+                        tagName += rowSubChar;
+                    }
+                    elementsCounter++;
+
+                    html += "<span class='tag-name'>" + tagName + "</span>";
+
+                    lastTagName = document.createElement(tagName).tagName;
+                }
+                else if (rowChar === '"' && openTagEnable === true) {
                     if (quoteEnable === false) {
                         if (doubleQuoteEnable === false) {
-                            htmlForRow += '<span class="string">"';
+                            html += '<span class="string">"';
                         }
                         else {
-                            htmlForRow += '"</span>';
+                            html += '"</span>';
                         }
                         doubleQuoteEnable = doubleQuoteEnable === false;
                     }
                     else {
-                        htmlForRow += rowChar;
+                        html += rowChar;
                     }
                 }
-                else if (rowChar === "'") {
+                else if (rowChar === "'" && openTagEnable === true) {
                     if (doubleQuoteEnable === false) {
                         if (quoteEnable === false) {
-                            htmlForRow += '<span class="string">' + "'";
+                            html += '<span class="string">' + "'";
                         }
                         else {
-                            htmlForRow += "'" + '</span>';
+                            html += "'" + '</span>';
                         }
                         quoteEnable = quoteEnable === false;
                     }
                     else {
-                        htmlForRow += rowChar;
+                        html += rowChar;
                     }
                 }
                 else if (doubleQuoteEnable === true || quoteEnable === true) {
-                    htmlForRow += rowChar;
+                    html += rowChar;
                 }
-                else if (rowChar === '{') {
-                    cssEnable = true;
-                    htmlForRow += '<span class="css-begin">{</span><span class="css-datas">';
-                }
-                else if (rowChar === '}') {
-                    cssEnable = false;
-                    htmlForRow += '</span><span class="css-end">}</span>';
-                }
-                else if (rowChar === ':' && splitEnable === false) {
-                    splitEnable = true;
-                    htmlForRow += ':<span class="right-side">';
-                }
-                else if (rowChar === ';' && splitEnable === true) {
-                    splitEnable = false;
-                    htmlForRow += '</span>;';
+                else if (rowChar === ">") {
+                    if (closeTagEnable === true) {
+                        closeTagEnable = false;
+                        html += "></span>";
+                    }
+                    else if (openTagEnable === true) {
+                        html += "></span>";
+                        openTagEnable = false;
+
+                        if (lastTagName === "SCRIPT" || lastTagName === "STYLE") {
+                            var tagHTML = "";
+
+                            var descriptionEnableMultipleForTag = false;
+                            var complatedTag = false;
+
+                            rowCharIndex++;
+                            var firstRowCharIndex = rowCharIndex;
+                            var firstRowIndex = rowIndex;
+                            for (; rowIndex < rows.length; rowIndex++) {
+                                row = rows[rowIndex];
+
+                                var quoteEnableForTag = false;
+                                var doubleQuoteEnableForTag = false;
+                                var descriptionEnableForTag = false;
+                                for (rowCharIndex = firstRowIndex === rowIndex ? rowCharIndex : 0; rowCharIndex < row.length; rowCharIndex++) {
+                                    rowChar = row[rowCharIndex];
+                                    rowCharNext = row[rowCharIndex + 1];
+                                    var rowCharPrevious = row[rowCharIndex - 1];
+
+                                    if (rowChar === "/" && rowCharNext === "*" && descriptionEnableMultipleForTag === false) {
+                                        descriptionEnableMultipleForTag = false;
+                                        rowCharIndex++;
+
+                                        tagHTML += rowChar;
+                                        tagHTML += rowCharNext;
+                                    }
+                                    else if (rowChar === "*" && rowCharNext === "/" && descriptionEnableMultipleForTag === true) {
+                                        descriptionEnableMultipleForTag = false;
+                                        rowCharIndex++;
+
+                                        tagHTML += rowChar;
+                                        tagHTML += rowCharNext;
+                                    }
+                                    else if (descriptionEnableMultipleForTag === true) {
+                                        tagHTML += rowChar;
+                                    }
+                                    else if (descriptionEnableForTag === false && quoteEnableForTag === false && doubleQuoteEnableForTag === false && rowChar === '/' && rowCharNext === '/') {
+                                        descriptionEnableForTag = true;
+                                        tagHTML += rowChar;
+                                    }
+                                    else if (descriptionEnableForTag === true) {
+                                        tagHTML += rowChar;
+                                    }
+                                    else if (rowCharPrevious !== '\\' && rowChar === '"') {
+                                        if (quoteEnableForTag === false) {
+                                            doubleQuoteEnableForTag = doubleQuoteEnableForTag === false;
+                                        }
+
+                                        tagHTML += rowChar;
+                                    }
+                                    else if (rowCharPrevious !== '\\' && rowChar === "'") {
+                                        if (doubleQuoteEnableForTag === false) {
+                                            quoteEnableForTag = quoteEnableForTag === false;
+                                        }
+
+                                        tagHTML += rowChar;
+                                    }
+                                    else if (doubleQuoteEnableForTag === true || quoteEnableForTag === true) {
+                                        tagHTML += rowChar;
+                                    }
+                                    else if (rowChar === "<" && rowCharNext === "/") {
+                                        complatedTag = true;
+                                        break;
+                                    }
+                                    else {
+                                        tagHTML += rowChar;
+                                    }
+                                }
+
+                                if (complatedTag === true) {
+                                    break;
+                                }
+
+                                if(rowIndex !== rows.length - 1){
+                                    tagHTML += "\n";
+                                }
+                            }
+
+                            if (complatedTag === true) {
+                                if(lastTagName === "SCRIPT"){
+                                    html += dmuka.MarkDown.Regions["javascript"].call(this_, private, tagHTML.split('\n'));
+                                }
+                                else if(lastTagName === "STYLE") {
+                                    html += dmuka.MarkDown.Regions["css"].call(this_, private, tagHTML.split('\n'));
+                                }
+
+                                if (firstRowIndex !== rowIndex) {
+                                    lastCharIndexForRecursive = rowCharIndex;
+                                    rowIndex--;
+                                    break;
+                                }
+                                else{
+                                    rowCharIndex--;
+                                }
+                            }
+                            else {
+                                rowCharIndex = firstRowCharIndex;
+                                rowIndex = firstRowIndex;
+
+                                row = rows[rowIndex];
+                            }
+                        }
+                    }
+                    else {
+                        html += rowChar;
+                    }
                 }
                 else {
-                    htmlForRow += rowChar;
+                    html += rowChar;
                 }
             }
 
-            if (splitEnable === true) {
-                htmlForRow += '</span>';
-            }
-            if (quoteEnable === true) {
-                htmlForRow += '</span>';
-            }
-            if (doubleQuoteEnable === true) {
-                htmlForRow += '</span>';
-            }
-
-            html += htmlForRow;
-            if (rowIndex !== rows.length - 1) {
+            if (rowIndex !== rows.length - 1 && lastTagName !== "SCRIPT" && lastTagName !== "STYLE") {
                 html += "<br/>";
             }
+            lastTagName = "";
         }
         if (descriptionEnable === true) {
             html += '</span>';
         }
-        if (cssEnable === true) {
+        if (openTagEnable === true) {
+            html += '</span>';
+        }
+        if (quoteEnable === true) {
+            html += '</span>';
+        }
+        if (doubleQuoteEnable === true) {
             html += '</span>';
         }
 
         return html;
-    })(private, rows, convertWord);
+    })(private, rows);
 
-    return DOMdiv.outerHTML;
+    return DOMspan.outerHTML;
 };
-// css --END
+// html --END
 
 /* Bind new regions --END */

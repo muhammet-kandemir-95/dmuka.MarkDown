@@ -32,6 +32,10 @@
     color: #800000;
 }
 
+.markdown-javascript .regex {
+    color: #bb3500;
+}
+
 .markdown-javascript .description {
     color: green;
 }
@@ -93,3 +97,23 @@
 }
 
 /* Region css --END*/
+
+/* Region html --BEGIN*/
+
+.markdown-html .open-tag {
+    color: #000000;
+}
+
+.markdown-html .tag-name, .markdown-html .close-tag {
+    color: #0e82b5;
+}
+
+.markdown-html .string {
+    color: #800000;
+}
+
+.markdown-html .description {
+    color: green;
+}
+
+/* Region html --END*/
