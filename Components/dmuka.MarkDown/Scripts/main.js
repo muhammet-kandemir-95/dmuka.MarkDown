@@ -904,6 +904,19 @@ dmuka.MarkDown.Convert = function (text) {
 
     // For Components --BEGIN
 
+    private.function.clearUneccessaryCharacters = function (rowChar) {
+        switch (rowChar) {
+            case " ":
+                return "&nbsp;";
+            case "<":
+                return "&lt;";
+            case "&":
+                return "&amp;";
+            default:
+                return rowChar;
+        }
+    };
+
     // This function working by javascript and csharp syntax. It's not for working only javascript or only csharp.
     // So you may think bad about this code and may remove some codes. Please don't it :D
     // But when you needed extreme process, you should write new method by your programming language
@@ -914,9 +927,6 @@ dmuka.MarkDown.Convert = function (text) {
         var html = "";
         for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             var row = rows[rowIndex];
-            row = private.function.clearHTMLInjection(row);
-            row = private.function.addSpacesToRow(row);
-
             var doubleQuoteEnable = doubleQuoteForMultipleRowEnable;
             var quoteEnable = false;
 
@@ -930,9 +940,9 @@ dmuka.MarkDown.Convert = function (text) {
             descriptionClosable = true;
 
             for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
-                var rowChar = row[rowCharIndex];
-                var rowCharPrevious = row[rowCharIndex - 1];
-                var rowCharNext = row[rowCharIndex + 1];
+                var rowChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
+                var rowCharPrevious = private.function.clearUneccessaryCharacters(row[rowCharIndex - 1]);
+                var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
 
                 if (descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && rowChar === '/' && rowCharNext === '/') {
                     descriptionEnable = true;
@@ -1010,7 +1020,7 @@ dmuka.MarkDown.Convert = function (text) {
 
                     htmlForRow += rowChar;
                 }
-                else if ("()".indexOf(rowChar) >= 0) {
+                else if ("(".indexOf(rowChar) >= 0) {
                     if (beforeSplitVariableOfFunction === true) {
                         htmlForRow += "<span class='special-function-or-variable'>" + convertWord(word) + "</span>";
                     }
@@ -1022,7 +1032,7 @@ dmuka.MarkDown.Convert = function (text) {
 
                     htmlForRow += rowChar;
                 }
-                else if (";[]{} ?||&&!===+-/*^".indexOf(rowChar) >= 0) {
+                else if (";)[]{} ?||&&!===+-/*^".indexOf(rowChar) >= 0 || rowChar === "&nbsp;") {
                     htmlForRow += convertWord(word);
                     beforeSplitVariableOfFunction = false;
                     word = "";
@@ -1234,6 +1244,132 @@ dmuka.MarkDown.Regions["csharp"] = function (private, rows) {
     return DOMdiv.outerHTML;
 };
 // csharp --END
+
+// css --BEGIN
+dmuka.MarkDown.Regions["css"] = function (private, rows) {
+    function convertWord(word) {
+        function convertToSpan() {
+            return "<span class='" + word + "'>" + word + "</span>";
+        }
+        switch (word) {
+            case "warning":
+                return convertToSpan();
+            default:
+                return word;
+        }
+    }
+
+    var DOMdiv = document.createElement("div");
+    DOMdiv.classList.add("markdown-css");
+    DOMdiv.innerHTML = (function (private, rows, convertWord) {
+        var html = "";
+
+        var descriptionEnable = false;
+        var cssEnable = false;
+        for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            var row = rows[rowIndex];
+
+            var doubleQuoteEnable = false;
+            var quoteEnable = false;
+            var splitEnable = false;
+            var htmlForRow = "";
+            for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
+                var rowChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
+                var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
+
+                if (rowChar === '/' && rowCharNext === '*' && descriptionEnable === false) {
+                    descriptionEnable = true;
+                    htmlForRow += "<span class='description'>/*";
+                    rowCharIndex++;
+                }
+                else if (rowChar === '*' && rowCharNext === '/' && descriptionEnable === true) {
+                    descriptionEnable = false;
+                    htmlForRow += "*/</span>";
+                    rowCharIndex++;
+                }
+                else if (descriptionEnable === true) {
+                    htmlForRow += rowChar;
+                }
+                else if (rowChar === '"') {
+                    if (quoteEnable === false) {
+                        if (doubleQuoteEnable === false) {
+                            htmlForRow += '<span class="string">"';
+                        }
+                        else {
+                            htmlForRow += '"</span>';
+                        }
+                        doubleQuoteEnable = doubleQuoteEnable === false;
+                    }
+                    else {
+                        htmlForRow += rowChar;
+                    }
+                }
+                else if (rowChar === "'") {
+                    if (doubleQuoteEnable === false) {
+                        if (quoteEnable === false) {
+                            htmlForRow += '<span class="string">' + "'";
+                        }
+                        else {
+                            htmlForRow += "'" + '</span>';
+                        }
+                        quoteEnable = quoteEnable === false;
+                    }
+                    else {
+                        htmlForRow += rowChar;
+                    }
+                }
+                else if (doubleQuoteEnable === true || quoteEnable === true) {
+                    htmlForRow += rowChar;
+                }
+                else if (rowChar === '{') {
+                    cssEnable = true;
+                    htmlForRow += '<span class="css-begin">{</span><span class="css-datas">';
+                }
+                else if (rowChar === '}') {
+                    cssEnable = false;
+                    htmlForRow += '</span><span class="css-end">}</span>';
+                }
+                else if (rowChar === ':' && splitEnable === false) {
+                    splitEnable = true;
+                    htmlForRow += ':<span class="right-side">';
+                }
+                else if (rowChar === ';' && splitEnable === true) {
+                    splitEnable = false;
+                    htmlForRow += '</span>;';
+                }
+                else {
+                    htmlForRow += rowChar;
+                }
+            }
+
+            if (splitEnable === true) {
+                htmlForRow += '</span>';
+            }
+            if (quoteEnable === true) {
+                htmlForRow += '</span>';
+            }
+            if (doubleQuoteEnable === true) {
+                htmlForRow += '</span>';
+            }
+
+            html += htmlForRow;
+            if (rowIndex !== rows.length - 1) {
+                html += "<br/>";
+            }
+        }
+        if (descriptionEnable === true) {
+            html += '</span>';
+        }
+        if (cssEnable === true) {
+            html += '</span>';
+        }
+
+        return html;
+    })(private, rows, convertWord);
+
+    return DOMdiv.outerHTML;
+};
+// css --END
 
 // css --BEGIN
 dmuka.MarkDown.Regions["css"] = function (private, rows) {
