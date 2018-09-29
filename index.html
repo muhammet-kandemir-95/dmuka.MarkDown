@@ -20,7 +20,7 @@
     <script>
         function updateMD() {
             setTimeout(() => {
-                document.querySelector("#md-html").innerHTML = dmuka.MarkDown(document.querySelector("textarea").value);
+                document.querySelector("#md-html").innerHTML = dmuka.MarkDown.Convert(document.querySelector("textarea").value);
             }, 100);
         }
     </script>

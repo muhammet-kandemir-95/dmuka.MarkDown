@@ -61,3 +61,31 @@
 }
 
 /* Region csharp --END*/
+
+/* Region csharp --BEGIN*/
+
+.markdown-css {
+    color: rgb(72, 101, 210);
+}
+
+.markdown-css .string {
+    color: #800000;
+}
+
+.markdown-css .css-begin, .markdown-css .css-end {
+    color: #b1b1b1;
+}
+
+.markdown-css .css-datas {
+    color: #a73700;
+}
+
+.markdown-css .right-side {
+    color: #000000;
+}
+
+.markdown-css .description {
+    color: green;
+}
+
+/* Region csharp --END*/
