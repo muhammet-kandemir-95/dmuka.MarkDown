@@ -1166,7 +1166,7 @@ dmuka.MarkDown.Regions["csharp"] = function (private, rows) {
         }
         switch (word) {
             case "string":
-            return "<span class='stringVar'>string</span>";
+                return "<span class='stringVar'>string</span>";
             case "var":
             case "new":
             case "const":
