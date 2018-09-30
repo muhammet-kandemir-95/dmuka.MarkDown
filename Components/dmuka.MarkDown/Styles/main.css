@@ -145,6 +145,7 @@
     box-sizing: border-box;
     padding: 10px;
     color: #6d6d6d;
+    width:100%;
 }
 
 .dmuka-markdown blockquote {
