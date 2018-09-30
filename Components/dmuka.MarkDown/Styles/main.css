@@ -2,10 +2,11 @@
 
 .markdown-item {
     display: inline-block;
-    background-color: #e0e0e0;
-    border-radius: 2px;
     padding-left: 2px;
     padding-right: 2px;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 23px;
 }
 
 /* Region markdown --END*/
@@ -117,3 +118,72 @@
 }
 
 /* Region html --END*/
+
+/* Theme For All Things --BEGIN */
+
+.dmuka-markdown * {
+    margin: 0px;
+}
+
+.dmuka-markdown {
+    font-family: arial;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10px;
+    color: #6d6d6d;
+}
+
+.dmuka-markdown blockquote {
+    box-sizing: border-box;
+    width: calc(100% - 30px);
+    border-left: 5px solid #e8e8e8;
+    margin-left: 30px;
+    padding-left: 10px;
+    display: inline-block;
+    color: #848484;
+    line-height: 23px;
+}
+
+
+.dmuka-markdown code {
+    display: inline-block;
+    box-sizing: border-box;
+    font-size: 13px;
+    background-color: #e0e0e0;
+    width: 100%;
+    padding-left: 10px;
+    line-height: 20px;
+    font-family: monospace;
+    color: #5f5f5f;
+}
+
+.dmuka-markdown table {
+    width: 100%;
+}
+
+.dmuka-markdown th {
+    color:#656565;
+}
+
+.dmuka-markdown td {
+    color:#8e8e8e;
+}
+
+.dmuka-markdown th,
+.dmuka-markdown td {
+    padding:5px;
+}
+
+.dmuka-markdown th:not(:last-child),
+.dmuka-markdown td:not(:last-child) {
+    border-right: 1px solid #dcdcdc;
+}
+
+.dmuka-markdown tr:not(:last-child) th,
+.dmuka-markdown tr:not(:last-child) td {
+    border-bottom: 1px solid #dcdcdc;
+}
+
+/* Theme For All Things --BEGIN */

@@ -1,0 +1,440 @@
+### Bold
+**Bold Text 1**
+__Bold Text 2__
+
+---
+### Italic
+*Italic Text 1*
+_Italic Text 2_
+
+---
+### Header
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### h6
+
+---
+### Strikethrough
+~~Strikethrough~~
+
+---
+### Unordered List
+* List 1 Item 1
+* List 1 Item 2
+  * List 2 Item 1
+  * List 2 Item 2
+    * List 3 Item 1
+  * List 2 Item 3
+    * List 3 Item 1
+* List 1 Item 3
+  * List 2 Item 1
+
++ List 1 Item 1
++ List 1 Item 2
+  + List 2 Item 1
+  + List 2 Item 2
+    + List 3 Item 1
+  + List 2 Item 3
+    + List 3 Item 1
++ List 1 Item 3
+  + List 2 Item 1
+
+- List 1 Item 1
+- List 1 Item 2
+  - List 2 Item 1
+  - List 2 Item 2
+    - List 3 Item 1
+  - List 2 Item 3
+    - List 3 Item 1
+- List 1 Item 3
+  - List 2 Item 1
+
+---
+### Ordered List
+1. List 1 Item 1
+2. List 1 Item 2
+  1. List 2 Item 1
+  2. List 2 Item 2
+    1. List 3 Item 1
+  3. List 2 Item 3
+    1. List 3 Item 1
+3. List 1 Item 3
+  1. List 2 Item 1
+
+1. List 1 Item 1
+1. List 1 Item 2
+  1. List 2 Item 1
+  1. List 2 Item 2
+    1. List 3 Item 1
+  1. List 2 Item 3
+    1. List 3 Item 1
+1. List 1 Item 3
+  1. List 2 Item 1
+
+---
+### Cheeckbox
+ - [ ] Unchecked
+ - [x] Checked
+
+---
+### Blockquote
+> Blockquote line 1
+> Blockquote line 2
+> Blockquote line 3
+> Blockquote line 4
+> Blockquote line 5
+
+---
+### Code
+    Code line 1
+    Code line 2
+    Code line 3
+    Code line 4
+    Code line 5
+
+---
+### Table
+|   Column1   |   Column2   |   Column3   |   Column4   |
+|:--|:--:|--:|--|
+|   Row 1 Text 1   |   Row 1 Text 2   |   Row 1 Text 3   |   Row 1 Text 4   |
+|   Row 2 Text 1   |   Row 2 Text 2   |   Row 2 Text 3   |   Row 2 Text 4   |
+|   Unneccessary Text   |   Unneccessary Text   |   Unneccessary Text   |   Unneccessary Text   |
+
+---
+### Region Formatter - markdown
+```markdown
+# Header
+**Bold**
+_Italic_
+```
+
+
+---
+### Region Formatter - html
+```html
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        dmuka.MarkDown - Muhammet Kandemir
+    </title>
+    <link rel="stylesheet" type="text/css" href="Components/dmuka.MarkDown/Styles/main.css">
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        body>h1 {
+            line-height: 50px;
+            margin: 0px;
+            text-align: center;
+            font-family: sans-serif;
+            background-color: #ececec;
+        }
+
+        div#md-html {
+            float: left;
+            width: 50%;
+            height: calc(100% - 50px);
+            overflow: auto;
+            box-sizing: border-box;
+            padding: 10px;
+            border-top: 1px solid #a9a9a9;
+            border-bottom: 1px solid #a9a9a9;
+        }
+
+        textarea {
+            width: 50%;
+            height: calc(100% - 50px);
+            float: left;
+            box-sizing: border-box;
+            padding: 10px;
+            resize: none;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        Welcome dmuka.MarkDown Documentation
+    </h1>
+    <textarea onkeydown="updateMD();">
+
+    </textarea>
+
+    <div id="md-html"></div>
+
+    <script src="Components/dmuka.MarkDown/Scripts/main.js"></script>
+    <script>
+        function updateMD() {
+            setTimeout(() => {
+                document.querySelector("#md-html").innerHTML = dmuka.MarkDown.Convert(document.querySelector("textarea").value);
+            }, 100);
+        }
+        function onLoadExample() {
+            document.querySelector("textarea").value = document.querySelector("iframe").contentWindow.document.body.childNodes[0].innerText;
+            updateMD();
+        }
+    </script>
+    <iframe src="example.txt" onload="onLoadExample();" style="display: none;"></iframe>
+</body>
+
+</html>
+```
+
+
+---
+### Region Formatter - javascript
+```javascript
+        function updateMD() {
+            setTimeout(() => {
+                document.querySelector("#md-html").innerHTML = dmuka.MarkDown.Convert(document.querySelector("textarea").value);
+            }, 100);
+        }
+        updateMD();
+```
+    
+
+---
+### Region Formatter - css
+```css
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        body>h1 {
+            line-height: 50px;
+            margin: 0px;
+            text-align: center;
+        }
+
+        div#md-html {
+            float: left;
+            width: 50%;
+            height: calc(100% - 50px);
+            overflow: auto;
+            box-sizing: border-box;
+            padding: 10px;
+            border-top: 1px solid #a9a9a9;
+            border-bottom: 1px solid #a9a9a9;
+        }
+
+        textarea {
+            width: 50%;
+            height: calc(100% - 50px);
+            float: left;
+            box-sizing: border-box;
+            padding: 10px;
+            resize: none;
+        }
+```
+    
+
+---
+### Region Formatter - csharp
+```csharp
+using MA.dotNET.Framework.Standart.ClassLibrary.QueueThread;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+
+namespace MA.dotNet.Framework.Web.ClassLibrary.HTTPFileServer
+{
+    public class HTTPServer : IDisposable
+    {
+        #region Constructors
+        public HTTPServer(string rootDirectory, int port, int coreCount = 1)
+        {
+            this.RootDirectory = rootDirectory;
+            this.Port = port;
+
+            this.Listener = new HttpListener();
+            this.Listener.Prefixes.Add("http://*:" + this.Port.ToString() + "/");
+
+            this.QueueServer = new QueueServer(coreCount);
+        }
+        #endregion
+
+        #region Variables
+        public string RootDirectohttps://open.spotify.com/track/5xqoIC1s1SNFR4VjV8BIA9ry { get; private set; }
+        public int Port { get; private set; }
+        public HttpListener Listener { get; private set; }
+        private bool _disposed = false;
+        internal QueueServer QueueServer = null;
+
+        private static Dictionary<string, string> _mimeTypes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            #region extension to MIME type list
+            {".html", "text/html"},
+            {".js", "application/x-javascript"},
+            {".css", "text/css"},
+            {".img", "application/octet-stream"},
+            {".jpeg", "image/jpeg"},
+            {".jpg", "image/jpeg"},
+            {".png", "image/png"},
+            {".txt", "text/plain"},
+
+            {".asf", "video/x-ms-asf"},
+            {".asx", "video/x-ms-asf"},
+            {".avi", "video/x-msvideo"},
+            {".bin", "application/octet-stream"},
+            {".cco", "application/x-cocoa"},
+            {".crt", "application/x-x509-ca-cert"},
+            {".deb", "application/octet-stream"},
+            {".der", "application/x-x509-ca-cert"},
+            {".dll", "application/octet-stream"},
+            {".dmg", "application/octet-stream"},
+            {".ear", "application/java-archive"},
+            {".eot", "application/octet-stream"},
+            {".exe", "application/octet-stream"},
+            {".flv", "video/x-flv"},
+            {".gif", "image/gif"},
+            {".hqx", "application/mac-binhex40"},
+            {".htc", "text/x-component"},
+            {".htm", "text/html"},
+            {".ico", "image/x-icon"},
+            {".iso", "application/octet-stream"},
+            {".jar", "application/java-archive"},
+            {".jardiff", "application/x-java-archive-diff"},
+            {".jng", "image/x-jng"},
+            {".jnlp", "application/x-java-jnlp-file"},
+            {".mml", "text/mathml"},
+            {".mng", "video/x-mng"},
+            {".mov", "video/quicktime"},
+            {".mp3", "audio/mpeg"},
+            {".mpeg", "video/mpeg"},
+            {".mpg", "video/mpeg"},
+            {".msi", "application/octet-stream"},
+            {".msm", "application/octet-stream"},
+            {".msp", "application/octet-stream"},
+            {".pdb", "application/x-pilot"},
+            {".pdf", "application/pdf"},
+            {".pem", "application/x-x509-ca-cert"},
+            {".pl", "application/x-perl"},
+            {".pm", "application/x-perl"},
+            {".prc", "application/x-pilot"},
+            {".ra", "audio/x-realaudio"},
+            {".rar", "application/x-rar-compressed"},
+            {".rpm", "application/x-redhat-package-manager"},
+            {".rss", "text/xml"},
+            {".run", "application/x-makeself"},
+            {".sea", "application/x-sea"},
+            {".shtml", "text/html"},
+            {".sit", "application/x-stuffit"},
+            {".swf", "application/x-shockwave-flash"},
+            {".tcl", "application/x-tcl"},
+            {".tk", "application/x-tcl"},
+            {".war", "application/java-archive"},
+            {".wbmp", "image/vnd.wap.wbmp"},
+            {".wmv", "video/x-ms-wmv"},
+            {".xml", "text/xml"},
+            {".xpi", "application/x-xpinstall"},
+            {".zip", "application/zip"},
+            #endregion
+        };
+        #endregion
+
+        #region Methods
+        public void Start()
+        {
+            try
+            {
+                this.Listener.Start();
+                this.QueueServer.Start();
+                while (this._disposed == false)
+                {
+                    try
+                    {
+                        HttpListenerContext context = this.Listener.GetContext();
+                        this.QueueServer.AddAction(() =>
+                        {
+                            try
+                            {
+                                // If file cached 
+                                if (string.IsNullOrEmpty(context.Request.Headers.Get("Cache-Control")) == false && string.IsNullOrEmpty(context.Request.Headers.Get("Pragma")) == true)
+                                    context.Response.StatusCode = (int)HttpStatusCode.NotModified;
+                                else
+                                {
+                                    string filename = context.Request.Url.AbsolutePath.Substring(1);
+                                    if (string.IsNullOrEmpty(filename))
+                                        filename = "index.html";
+                                    filename = Path.Combine(this.RootDirectory, filename);
+                                    filename = Path.GetFullPath(filename);
+
+                                    if (filename.StartsWith(this.RootDirectory) == false)
+                                        context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                                    else
+                                    {
+                                        try
+                                        {
+                                            Stream input = new FileStream(filename, FileMode.Open);
+
+                                            string mime;
+                                            context.Response.ContentType = _mimeTypes.TryGetValue(Path.GetExtension(filename), out mime) ? mime : "application/octet-stream";
+                                            context.Response.AddHeader("Cache-Control", "public,max-age=" + int.MaxValue);
+                                            context.Response.AddHeader("Content-Encoding", "gzip");
+
+                                            #region Before
+                                            GZipStream gzip = new GZipStream(context.Response.OutputStream, CompressionMode.Compress, true);
+
+                                            byte[] readBuffer = new byte[1024 * 16];
+                                            int nbytes;
+                                            while ((nbytes = input.Read(readBuffer, 0, readBuffer.Length)) > 0)
+                                                gzip.Write(readBuffer, 0, nbytes);
+                                            input.Close();
+                                            gzip.Flush();
+
+                                            context.Response.ContentLength64 = context.Response.OutputStream.Length;
+                                            #endregion
+
+                                            context.Response.StatusCode = (int)HttpStatusCode.OK;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                                        }
+                                    }
+                                }
+
+                                context.Response.OutputStream.Close();
+                            }
+                            catch (Exception ex)
+                            {
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (this._disposed == false)
+                    throw ex;
+            }
+        }
+
+        public void Dispose()
+        {
+            this._disposed = true;
+
+            try { this.Listener.Stop(); } catch { }
+        }
+        #endregion
+    }
+}
+
+```
+    

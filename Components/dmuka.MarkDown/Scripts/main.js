@@ -756,6 +756,7 @@ dmuka.MarkDown.Convert = function (text) {
 
                 listClearFunction();
 
+                addBRFunction();
                 continue;
             }
 
@@ -899,7 +900,11 @@ dmuka.MarkDown.Convert = function (text) {
             listClearFunction();
         }
 
-        return html;
+        var DOMspanResult = document.createElement("span");
+        DOMspanResult.classList.add("dmuka-markdown");
+        DOMspanResult.innerHTML = html;
+    
+        return DOMspanResult.outerHTML;
     };
 
     // For Components --BEGIN
