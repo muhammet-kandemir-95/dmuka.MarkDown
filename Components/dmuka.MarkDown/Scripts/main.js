@@ -1438,14 +1438,18 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                             rowCharIndex--;
                             break;
                         }
-                        
+
                         tagName += rowSubChar;
                     }
                     elementsCounter++;
 
                     html += "<span class='tag-name'>" + tagName + "</span>";
 
-                    lastTagName = document.createElement(tagName).tagName;
+                    try {
+                        lastTagName = document.createElement(tagName).tagName;
+                    } catch (error) {
+                        lastTagName = "";
+                    }
                 }
                 else if (rowChar === '"' && openTagEnable === true) {
                     if (quoteEnable === false) {
@@ -1561,16 +1565,16 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                                     break;
                                 }
 
-                                if(rowIndex !== rows.length - 1){
+                                if (rowIndex !== rows.length - 1) {
                                     tagHTML += "\n";
                                 }
                             }
 
                             if (complatedTag === true) {
-                                if(lastTagName === "SCRIPT"){
+                                if (lastTagName === "SCRIPT") {
                                     html += dmuka.MarkDown.Regions["javascript"].call(this_, private, tagHTML.split('\n'));
                                 }
-                                else if(lastTagName === "STYLE") {
+                                else if (lastTagName === "STYLE") {
                                     html += dmuka.MarkDown.Regions["css"].call(this_, private, tagHTML.split('\n'));
                                 }
 
@@ -1579,7 +1583,7 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                                     rowIndex--;
                                     break;
                                 }
-                                else{
+                                else {
                                     rowCharIndex--;
                                 }
                             }
