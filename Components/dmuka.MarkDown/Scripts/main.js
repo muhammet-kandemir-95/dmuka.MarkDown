@@ -904,7 +904,7 @@ dmuka.MarkDown.Convert = function (text) {
 
     // For Components --BEGIN
 
-    private.function.clearUneccessaryCharacters = function (rowChar) {
+    private.function.clearUnneccessaryCharacters = function (rowChar) {
         switch (rowChar) {
             case " ":
                 return "&nbsp;";
@@ -941,9 +941,9 @@ dmuka.MarkDown.Convert = function (text) {
             descriptionClosable = true;
 
             for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
-                var rowChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
-                var rowCharPrevious = private.function.clearUneccessaryCharacters(row[rowCharIndex - 1]);
-                var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
+                var rowChar = private.function.clearUnneccessaryCharacters(row[rowCharIndex]);
+                var rowCharPrevious = private.function.clearUnneccessaryCharacters(row[rowCharIndex - 1]);
+                var rowCharNext = private.function.clearUnneccessaryCharacters(row[rowCharIndex + 1]);
 
                 if (rowChar === "/" && rowCharPrevious !== "/" && rowCharNext !== "&nbsp;" && rowCharNext !== "/" && rowCharNext !== "*" && descriptionEnable === false && quoteEnable === false && doubleQuoteEnable === false && regexEnable === false) {
                     regexEnable = true;
@@ -1280,8 +1280,8 @@ dmuka.MarkDown.Regions["css"] = function (private, rows) {
             var splitEnable = false;
             var htmlForRow = "";
             for (var rowCharIndex = 0; rowCharIndex < row.length; rowCharIndex++) {
-                var rowChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
-                var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
+                var rowChar = private.function.clearUnneccessaryCharacters(row[rowCharIndex]);
+                var rowCharNext = private.function.clearUnneccessaryCharacters(row[rowCharIndex + 1]);
 
                 if (rowChar === '/' && rowCharNext === '*' && descriptionEnable === false) {
                     descriptionEnable = true;
@@ -1399,10 +1399,10 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
 
             for (var rowCharIndex = lastCharIndexForRecursive; rowCharIndex < row.length; rowCharIndex++) {
                 lastCharIndexForRecursive = 0;
-                var rowChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
-                var rowCharNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 1]);
-                var rowCharNextNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 2]);
-                var rowCharNextNextNext = private.function.clearUneccessaryCharacters(row[rowCharIndex + 3]);
+                var rowChar = private.function.clearUnneccessaryCharacters(row[rowCharIndex]);
+                var rowCharNext = private.function.clearUnneccessaryCharacters(row[rowCharIndex + 1]);
+                var rowCharNextNext = private.function.clearUnneccessaryCharacters(row[rowCharIndex + 2]);
+                var rowCharNextNextNext = private.function.clearUnneccessaryCharacters(row[rowCharIndex + 3]);
 
                 if (rowChar === "&lt;" && rowCharNext === "!" && rowCharNextNext === "-" && rowCharNextNextNext === "-" && descriptionEnable === false) {
                     descriptionEnable = true;
@@ -1431,7 +1431,7 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                     var lastCharForTagName = "";
                     rowCharIndex++;
                     for (; rowCharIndex < row.length; rowCharIndex++) {
-                        var rowSubChar = private.function.clearUneccessaryCharacters(row[rowCharIndex]);
+                        var rowSubChar = private.function.clearUnneccessaryCharacters(row[rowCharIndex]);
 
                         if (rowSubChar === "&nbsp;" || rowSubChar === ">") {
                             lastCharForTagName = rowSubChar;
