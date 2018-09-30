@@ -1,6 +1,6 @@
 /* Region markdown --BEGIN*/
 
-.markdown-item {
+.dmuka-markdown .markdown .markdown-item {
     display: inline-block;
     padding-left: 2px;
     padding-right: 2px;
@@ -13,31 +13,35 @@
 
 /* Region javascript --BEGIN*/
 
-.markdown-javascript .try, .markdown-javascript .catch, .markdown-javascript .for, .markdown-javascript .if, .markdown-javascript .else, .markdown-javascript .while, .markdown-javascript .do, .markdown-javascript .switch {
+.dmuka-markdown .markdown-javascript {
+    color: #000;
+}
+
+.dmuka-markdown .markdown-javascript .try, .dmuka-markdown .markdown-javascript .catch, .dmuka-markdown .markdown-javascript .for, .dmuka-markdown .markdown-javascript .if, .dmuka-markdown .markdown-javascript .else, .dmuka-markdown .markdown-javascript .while, .dmuka-markdown .markdown-javascript .do, .dmuka-markdown .markdown-javascript .switch {
     color: #69158f;
 }
 
-.markdown-javascript .this, .markdown-javascript .break, .markdown-javascript .continue, .markdown-javascript .var, .markdown-javascript .let, .markdown-javascript .const, .markdown-javascript .function, .markdown-javascript .false, .markdown-javascript .true, .markdown-javascript .new, .markdown-javascript .null, .markdown-javascript .undefined, .markdown-javascript .case, .markdown-javascript .default, .markdown-javascript .typeof, .markdown-javascript .return {
+.dmuka-markdown .markdown-javascript .this, .dmuka-markdown .markdown-javascript .break, .dmuka-markdown .markdown-javascript .continue, .dmuka-markdown .markdown-javascript .var, .dmuka-markdown .markdown-javascript .let, .dmuka-markdown .markdown-javascript .const, .dmuka-markdown .markdown-javascript .function, .dmuka-markdown .markdown-javascript .false, .dmuka-markdown .markdown-javascript .true, .dmuka-markdown .markdown-javascript .new, .dmuka-markdown .markdown-javascript .null, .dmuka-markdown .markdown-javascript .undefined, .dmuka-markdown .markdown-javascript .case, .dmuka-markdown .markdown-javascript .default, .dmuka-markdown .markdown-javascript .typeof, .dmuka-markdown .markdown-javascript .return {
     color: #0000e6;
 }
 
-.markdown-javascript .document, .markdown-javascript .window, .markdown-javascript .dollar {
+.dmuka-markdown .markdown-javascript .document, .dmuka-markdown .markdown-javascript .window, .dmuka-markdown .markdown-javascript .dollar {
     color: rgb(160, 83, 0);
 }
 
-.markdown-javascript .special-function-or-variable {
+.dmuka-markdown .markdown-javascript .special-function-or-variable {
     color: rgb(142, 139, 0);
 }
 
-.markdown-javascript .string {
+.dmuka-markdown .markdown-javascript .string {
     color: #800000;
 }
 
-.markdown-javascript .regex {
+.dmuka-markdown .markdown-javascript .regex {
     color: #bb3500;
 }
 
-.markdown-javascript .description {
+.dmuka-markdown .markdown-javascript .description {
     color: green;
 }
 
@@ -45,27 +49,31 @@
 
 /* Region csharp --BEGIN*/
 
-.markdown-csharp .try, .markdown-csharp .catch, .markdown-csharp .for, .markdown-csharp .if, .markdown-csharp .else, .markdown-csharp .while, .markdown-csharp .do, .markdown-csharp .switch {
+.dmuka-markdown .markdown-csharp {
+    color: #000;
+}
+
+.dmuka-markdown .markdown-csharp .try, .dmuka-markdown .markdown-csharp .catch, .dmuka-markdown .markdown-csharp .for, .dmuka-markdown .markdown-csharp .if, .dmuka-markdown .markdown-csharp .else, .dmuka-markdown .markdown-csharp .while, .dmuka-markdown .markdown-csharp .do, .dmuka-markdown .markdown-csharp .switch {
     color: #69158f;
 }
 
-.markdown-csharp .void, .markdown-csharp .lock, .markdown-csharp .checked, .markdown-csharp .unchecked, .markdown-csharp .var, .markdown-csharp .new, .markdown-csharp .const, .markdown-csharp .typeof, .markdown-csharp .case, .markdown-csharp .default, .markdown-csharp .switch, .markdown-csharp .break, .markdown-csharp .continue, .markdown-csharp .return, .markdown-csharp .true, .markdown-csharp .false, .markdown-csharp .null, .markdown-csharp .async, .markdown-csharp .await, .markdown-csharp .public, .markdown-csharp .private, .markdown-csharp .protected, .markdown-csharp .internal, .markdown-csharp .static, .markdown-csharp .virtual, .markdown-csharp .override, .markdown-csharp .abstract, .markdown-csharp .sealed, .markdown-csharp .get, .markdown-csharp .set, .markdown-csharp .using, .markdown-csharp .namespace, .markdown-csharp .class, .markdown-csharp .struct, .markdown-csharp .stringVar, .markdown-csharp .bool, .markdown-csharp .byte, .markdown-csharp .sbyte, .markdown-csharp .short, .markdown-csharp .ushort, .markdown-csharp .int, .markdown-csharp .uint, .markdown-csharp .long, .markdown-csharp .ulong, .markdown-csharp .float, .markdown-csharp .double, .markdown-csharp .decimal, .markdown-csharp .throw, .markdown-csharp .this, .markdown-csharp .implicit, .markdown-csharp .explicit, .markdown-csharp .operator {
+.dmuka-markdown .markdown-csharp .void, .dmuka-markdown .markdown-csharp .lock, .dmuka-markdown .markdown-csharp .checked, .dmuka-markdown .markdown-csharp .unchecked, .dmuka-markdown .markdown-csharp .var, .dmuka-markdown .markdown-csharp .new, .dmuka-markdown .markdown-csharp .const, .dmuka-markdown .markdown-csharp .typeof, .dmuka-markdown .markdown-csharp .case, .dmuka-markdown .markdown-csharp .default, .dmuka-markdown .markdown-csharp .switch, .dmuka-markdown .markdown-csharp .break, .dmuka-markdown .markdown-csharp .continue, .dmuka-markdown .markdown-csharp .return, .dmuka-markdown .markdown-csharp .true, .dmuka-markdown .markdown-csharp .false, .dmuka-markdown .markdown-csharp .null, .dmuka-markdown .markdown-csharp .async, .dmuka-markdown .markdown-csharp .await, .dmuka-markdown .markdown-csharp .public, .dmuka-markdown .markdown-csharp .private, .dmuka-markdown .markdown-csharp .protected, .dmuka-markdown .markdown-csharp .internal, .dmuka-markdown .markdown-csharp .static, .dmuka-markdown .markdown-csharp .virtual, .dmuka-markdown .markdown-csharp .override, .dmuka-markdown .markdown-csharp .abstract, .dmuka-markdown .markdown-csharp .sealed, .dmuka-markdown .markdown-csharp .get, .dmuka-markdown .markdown-csharp .set, .dmuka-markdown .markdown-csharp .using, .dmuka-markdown .markdown-csharp .namespace, .dmuka-markdown .markdown-csharp .class, .dmuka-markdown .markdown-csharp .struct, .dmuka-markdown .markdown-csharp .stringVar, .dmuka-markdown .markdown-csharp .bool, .dmuka-markdown .markdown-csharp .byte, .dmuka-markdown .markdown-csharp .sbyte, .dmuka-markdown .markdown-csharp .short, .dmuka-markdown .markdown-csharp .ushort, .dmuka-markdown .markdown-csharp .int, .dmuka-markdown .markdown-csharp .uint, .dmuka-markdown .markdown-csharp .long, .dmuka-markdown .markdown-csharp .ulong, .dmuka-markdown .markdown-csharp .float, .dmuka-markdown .markdown-csharp .double, .dmuka-markdown .markdown-csharp .decimal, .dmuka-markdown .markdown-csharp .throw, .dmuka-markdown .markdown-csharp .this, .dmuka-markdown .markdown-csharp .implicit, .dmuka-markdown .markdown-csharp .explicit, .dmuka-markdown .markdown-csharp .operator {
     color: #0000e6;
 }
 
-.markdown-csharp ._elif, .markdown-csharp ._else, .markdown-csharp ._endif, .markdown-csharp ._endregion, .markdown-csharp ._error, .markdown-csharp ._if, .markdown-csharp ._line, .markdown-csharp ._pragma, .markdown-csharp ._region, .markdown-csharp ._warning {
+.dmuka-markdown .markdown-csharp ._elif, .dmuka-markdown .markdown-csharp ._else, .dmuka-markdown .markdown-csharp ._endif, .dmuka-markdown .markdown-csharp ._endregion, .dmuka-markdown .markdown-csharp ._error, .dmuka-markdown .markdown-csharp ._if, .dmuka-markdown .markdown-csharp ._line, .dmuka-markdown .markdown-csharp ._pragma, .dmuka-markdown .markdown-csharp ._region, .dmuka-markdown .markdown-csharp ._warning {
     color: #888888;
 }
 
-.markdown-csharp .interface {
+.dmuka-markdown .markdown-csharp .interface {
     color: rgb(142, 139, 0);
 }
 
-.markdown-csharp .string {
+.dmuka-markdown .markdown-csharp .string {
     color: #800000;
 }
 
-.markdown-csharp .description {
+.dmuka-markdown .markdown-csharp .description {
     color: green;
 }
 
@@ -73,27 +81,27 @@
 
 /* Region css --BEGIN*/
 
-.markdown-css {
+.dmuka-markdown .markdown-css {
     color: rgb(72, 101, 210);
 }
 
-.markdown-css .string {
+.dmuka-markdown .markdown-css .string {
     color: #800000;
 }
 
-.markdown-css .css-begin, .markdown-css .css-end {
+.dmuka-markdown .markdown-css .css-begin, .dmuka-markdown .markdown-css .css-end {
     color: #b1b1b1;
 }
 
-.markdown-css .css-datas {
+.dmuka-markdown .markdown-css .css-datas {
     color: #a73700;
 }
 
-.markdown-css .right-side {
+.dmuka-markdown .markdown-css .right-side {
     color: #000000;
 }
 
-.markdown-css .description {
+.dmuka-markdown .markdown-css .description {
     color: green;
 }
 
@@ -101,19 +109,23 @@
 
 /* Region html --BEGIN*/
 
-.markdown-html .open-tag {
+.dmuka-markdown .markdown-html {
+    color: #000;
+}
+
+.dmuka-markdown .markdown-html .open-tag {
     color: #000000;
 }
 
-.markdown-html .tag-name, .markdown-html .close-tag {
+.dmuka-markdown .markdown-html .tag-name, .dmuka-markdown .markdown-html .close-tag {
     color: #0e82b5;
 }
 
-.markdown-html .string {
+.dmuka-markdown .markdown-html .string {
     color: #800000;
 }
 
-.markdown-html .description {
+.dmuka-markdown .markdown-html .description {
     color: green;
 }
 
@@ -146,7 +158,6 @@
     line-height: 23px;
 }
 
-
 .dmuka-markdown code {
     display: inline-block;
     box-sizing: border-box;
@@ -164,25 +175,22 @@
 }
 
 .dmuka-markdown th {
-    color:#656565;
+    color: #656565;
 }
 
 .dmuka-markdown td {
-    color:#8e8e8e;
+    color: #8e8e8e;
 }
 
-.dmuka-markdown th,
-.dmuka-markdown td {
-    padding:5px;
+.dmuka-markdown th, .dmuka-markdown td {
+    padding: 5px;
 }
 
-.dmuka-markdown th:not(:last-child),
-.dmuka-markdown td:not(:last-child) {
+.dmuka-markdown th:not(:last-child), .dmuka-markdown td:not(:last-child) {
     border-right: 1px solid #dcdcdc;
 }
 
-.dmuka-markdown tr:not(:last-child) th,
-.dmuka-markdown tr:not(:last-child) td {
+.dmuka-markdown tr:not(:last-child) th, .dmuka-markdown tr:not(:last-child) td {
     border-bottom: 1px solid #dcdcdc;
 }
 
