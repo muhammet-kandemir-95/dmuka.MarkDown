@@ -104,6 +104,14 @@ _Italic Text 2_
 |   Unneccessary Text   |   Unneccessary Text   |   Unneccessary Text   |   Unneccessary Text   |
 
 ---
+### Link
+[Go to Google](https://www.google.com)
+
+---
+### Image
+![Google Image](https://www.google.com.tr/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png)
+
+---
 ### Region Formatter - markdown
 ```markdown
 # Header
