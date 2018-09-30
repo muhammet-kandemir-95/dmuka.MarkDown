@@ -267,7 +267,7 @@ namespace MA.dotNet.Framework.Web.ClassLibrary.HTTPFileServer
         #endregion
 
         #region Variables
-        public string RootDirectohttps://open.spotify.com/track/5xqoIC1s1SNFR4VjV8BIA9ry { get; private set; }
+        public string RootDirecty { get; private set; }
         public int Port { get; private set; }
         public HttpListener Listener { get; private set; }
         private bool _disposed = false;
