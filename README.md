@@ -94,6 +94,14 @@ _text_
  - [x] Checked Item
 ```
 
+### Line
+ Satır çizmenizi sağlar.
+ 
+#### Örnek Kullanım
+```markdown
+---
+```
+
 ### Blockquote
  Metinlerinizde "_Blockquote_" özelliğini kullanmanıza olanak sağlar.
  
