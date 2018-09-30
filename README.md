@@ -128,7 +128,7 @@ _text_
 |:--|:--:|--:|--|
 |   Row 1 Text 1   |   Row 1 Text 2   |   Row 1 Text 3   |   Row 1 Text 4   |
 |   Row 2 Text 1   |   Row 2 Text 2   |   Row 2 Text 3   |   Row 2 Text 4   |
-|   Unneccessary Text For Show Text Align      Unneccessary Text For Show Text Align   |   Unneccessary Text For Show Text Align   |   Unneccessary Text For Show Text Align   |
+|   Unneccessary Text For Show Text Align   |   Unneccessary Text For Show Text Align   |   Unneccessary Text For Show Text Align   |   Unneccessary Text For Show Text Align   |
 ```
 
 ### Link
