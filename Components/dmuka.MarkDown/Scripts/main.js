@@ -1599,6 +1599,7 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                                 row = rows[rowIndex];
                             }
                         }
+                        lastTagName = "";
                     }
                     else {
                         html += rowChar;
@@ -1609,10 +1610,9 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                 }
             }
 
-            if (rowIndex !== rows.length - 1 && lastTagName !== "SCRIPT" && lastTagName !== "STYLE") {
+            if (rowIndex !== rows.length - 1) {
                 html += "<br/>";
             }
-            lastTagName = "";
         }
         if (descriptionEnable === true) {
             html += '</span>';
