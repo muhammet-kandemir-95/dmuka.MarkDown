@@ -1,41 +1,41 @@
 # dmuka.MarkDown (JavaScript Library for Web Sites)
-Demo : http://www.bilgisayarafisildayanadam.com/dmuka.MarkDown/
+ Demo : http://www.bilgisayarafisildayanadam.com/dmuka.MarkDown/
 
- Bu kütüphaneyi kullanarak projelerinizde MD formatında yazıları destekleyebilir, kullanıcılarınıza çok daha fazla fonksiyonları olan notlar tutmalarını sağlayabilirsiniz.
+ By using this library, you can support MD format scripts in your projects, and enable your users take notes with further functions.
  
- **Hız** olarak çok başarılı olan "_dmuka.MarkDown_" projesinin kullanımı oldukça basittir.
+ The usage of "_dmuka.MarkDown_" project, highly successful in **speed**, is quite simple.
  
-#### Örnek Kullanım
+#### Example Usage
 ```javascript
 var html = dmuka.MarkDown.Convert(<md-text>);
 ```
 
- Birçok _MD_ özelliğini desteklemektedir.
+ Supports many _MD_ features.
  
-## Desteklenen Özellikler
+## Supported Features
 
 ### Bold
- Metinlerinizi kalın olarak yazmanızı sağlar.
+ Enables bold font.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 **text**
 __text__
 ```
 
 ### Italic
- Metinlerinizi italic olarak yazmanızı sağlar.
+ Enables italic font.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 *text*
 _text_
 ```
 
 ### Header
- Metinlerinizi başlık olarak yazmanızı sağlar.
+ Enables headline.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 # H1
 ## H2
@@ -46,17 +46,17 @@ _text_
 ```
 
 ### Strikethrough
- Metinlerinizi üstü çizili olarak yazmanızı sağlar.
+ Enables crossing out.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 ~~text~~
 ```
 
 ### Unordered List
- Metinlerinizde maddelendirme kullanmanıza olanak sağlar.
+ Enables listing.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 - List1 Item 1
 - List1 Item 2
@@ -72,9 +72,9 @@ _text_
 ```
 
 ### Ordered List
- Metinlerinizde sayı ile maddelendirme kullanmanıza olanak sağlar.
+ Enables numbering.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 1. List1 Item 1
 2. List1 Item 2
@@ -86,43 +86,43 @@ _text_
 ```
 
 ### Checkbox
- Metinlerinizde işaretleme kutusunu kullanma olanağı sağlar.
+ Enables check box.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
  - [ ] Unchecked Item
  - [x] Checked Item
 ```
 
 ### Line
- Satır çizmenizi sağlar.
+ Enables lining.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 ---
 ```
 
 ### Blockquote
- Metinlerinizde "_Blockquote_" özelliğini kullanmanıza olanak sağlar.
+ Activates “_Blockquote_” feature on text.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 >  Hello World
 >  This is so fast!
 ```
 
 ### Code
- Metinlerinizde "_Code_" özelliğini kullanmanıza olanak sağlar.
+ Activates "_Code_" feature on text
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
     This is code line!
 ```
 
 ### Table
- Metinlerinizde "_Table_" özelliğini kullanmanıza olanak sağlar.
+ Activates "_Table_" feature on text.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 |   Column1   |   Column2   |   Column3   |   Column4   |
 |:--|:--:|--:|--|
@@ -132,35 +132,35 @@ _text_
 ```
 
 ### Link
- Metinlerinizde link vermenize olanak sağlar.
+ Enables linking on text.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 [Link Text](https://thisismylinkurl.com)
 ```
 
 ### Image
- Metinlerinize resim eklemenize olanak sağlar.
+ Enables adding picture on text.
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
 ![Image Alt](https://thisismyimageurl.com)
 ```
 
 ### Region Formatter
- Metinlerinizi formatlandırmanızı sağlar.
+ Enables formatting text.
  
-#### Hazır Formatlar
+#### Ready to use Formats
 * html
 * javascript
 * css
 * csharp
  
-#### Örnek Kullanım
+#### Example Usage
 ```markdown
     ```MyFormatterName
     ```
 ```
 
-## Önemli Not
- Aynı anda birden fazla özelliğin kullanım örnekleri [demo](http://www.bilgisayarafisildayanadam.com/dmuka.MarkDown/) içerisinde yer almaktadır.
+## Important Note
+ The example use of multiple features is presented in [demo](http://www.bilgisayarafisildayanadam.com/dmuka.MarkDown/).
