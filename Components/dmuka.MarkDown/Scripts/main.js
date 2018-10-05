@@ -903,7 +903,7 @@ dmuka.MarkDown.Convert = function (text) {
         var DOMspanResult = document.createElement("span");
         DOMspanResult.classList.add("dmuka-markdown");
         DOMspanResult.innerHTML = html;
-    
+
         return DOMspanResult.outerHTML;
     };
 
@@ -1505,12 +1505,14 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                             rowCharIndex++;
                             var firstRowCharIndex = rowCharIndex;
                             var firstRowIndex = rowIndex;
+                            var onlySpaceLastRow = false;
                             for (; rowIndex < rows.length; rowIndex++) {
                                 row = rows[rowIndex];
 
                                 var quoteEnableForTag = false;
                                 var doubleQuoteEnableForTag = false;
                                 var descriptionEnableForTag = false;
+                                var onlySpaceLastRowCounterForActiveRow = 0;
                                 for (rowCharIndex = firstRowIndex === rowIndex ? rowCharIndex : 0; rowCharIndex < row.length; rowCharIndex++) {
                                     rowChar = row[rowCharIndex];
                                     rowCharNext = row[rowCharIndex + 1];
@@ -1558,10 +1560,16 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                                         tagHTML += rowChar;
                                     }
                                     else if (rowChar === "<" && rowCharNext === "/") {
+                                        if (onlySpaceLastRowCounterForActiveRow === rowCharIndex) {
+                                            onlySpaceLastRow = true;
+                                        }
                                         complatedTag = true;
                                         break;
                                     }
                                     else {
+                                        if (rowChar === " ") {
+                                            onlySpaceLastRowCounterForActiveRow++;
+                                        }
                                         tagHTML += rowChar;
                                     }
                                 }
@@ -1586,6 +1594,9 @@ dmuka.MarkDown.Regions["html"] = function (private, rows) {
                                 if (firstRowIndex !== rowIndex) {
                                     lastCharIndexForRecursive = rowCharIndex;
                                     rowIndex--;
+                                    if (onlySpaceLastRow === true) {
+                                        lastCharIndexForRecursive = 0;
+                                    }
                                     break;
                                 }
                                 else {
