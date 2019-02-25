@@ -1,5 +1,5 @@
 # dmuka.MarkDown (JavaScript Library for Web Sites)
- Demo : http://www.bilgisayarafisildayanadam.com/dmuka.MarkDown/
+ Demo : https://muhammet-kandemir-95.github.io/dmuka.MarkDown/
 
  By using this library, you can support MD format scripts in your projects, and enable your users take notes with further functions.
  
